@@ -37877,11 +37877,12 @@ angular.module('exampleApp', [
                 controller: 'HomeCtrl'
             });
     }
-])
+]);
+
 angular.module('exampleApp')
 .controller('HomeCtrl', [
     '$scope',
     function ($scope) {
-        $scope.message = 'This is user list ##';
+        $scope.message = 'Custom test message';
     }
 ])
