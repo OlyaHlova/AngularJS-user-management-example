@@ -1,2 +1,16 @@
-<h1>{{message}}</h1>
-<div id="{{ userName }}">11-{{ userName }}-44</div>
+<section class="user-list container">
+    <div class="user-list--card title">
+        <div class="user-list--item">Username</div>
+        <div class="user-list--item">First name</div>
+        <div class="user-list--item">Last name</div>
+        <div class="user-list--item">Email</div>
+        <div class="user-list--item">Type</div>
+    </div>
+    <div class="user-list--card" ng-init="getUser(user.userName)">
+        <div class="user-list--item">{{ user.userName }}</div>
+        <div class="user-list--item">{{ user.firstName }}</div>
+        <div class="user-list--item">{{ user.lastName }}</div>
+        <div class="user-list--item">{{ user.email }}</div>
+        <div class="user-list--item">{{ user.type }}</div>
+    </div>
+</section>

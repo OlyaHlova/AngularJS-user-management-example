@@ -91,6 +91,18 @@ app.get('/users', function (req, res) {
   res.send(users);
 });
 
+// Fetch a single user by userName
+app.get('/users/:userName', function (req, res) {
+    const userName = req.params.userName;
+    const user = users.find(user => user.userName === userName);
+
+    if (user) {
+        res.send(user);
+    } else {
+        res.sendStatus(404); // User not found
+    }
+});
+
 app.post('/users', function(req, res) {
     users.push({
         userName: req.body.userName,
@@ -100,7 +112,40 @@ app.post('/users', function(req, res) {
         type: req.body.type
     });
     res.sendStatus(200);
-})
+});
+
+app.put('/users/:id', function(req, res) {
+    const id = parseInt(req.params.id);
+    const updatedUser = {
+        userName: req.body.userName,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        type: req.body.type
+    };
+
+    const index = users.findIndex(user => user.id === id);
+
+    if (index !== -1) {
+        users[index] = { id, ...updatedUser };
+        res.sendStatus(200);
+    } else {
+        res.sendStatus(404); // User not found
+    }
+});
+
+app.delete('/users/:id', function(req, res) {
+    const id = parseInt(req.params.id);
+
+    const index = users.findIndex(user => user.id === id);
+
+    if (index !== -1) {
+        users.splice(index, 1);
+        res.sendStatus(200);
+    } else {
+        res.sendStatus(404); // User not found
+    }
+});
 
 var server = app.listen(3002, function () {
   console.log('backend started');

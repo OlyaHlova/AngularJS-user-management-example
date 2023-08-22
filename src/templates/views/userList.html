@@ -1,51 +1,53 @@
-<a href="#!user">User</a>
-<br>
-<a href="#!users/userName">User name</a>
+<div >
+    <!-- Button to toggle form visibility -->
+    <button ng-click="toggleForm()">Create User</button>
 
-<div id="{{ userName }}">{{ userName }}</div>
-<p>{{message}}</p>
-
-<div ng-controller='formCtrl'>
-    <h2>Create new user</h2>
-    <div>Username</div>
-    <input type="text" ng-model="userName">
-    {{userName + "user Name"}}
-    <br>
-    <input type="text" ng-model="inputData">
-    {{inputData + " custom string"}}
-    <br>
-    <button ng-click='createUser(userName)'>Create User</button>
-</div>
-
-<hr>
-<input type="text" ng-model="user.userName">
-<br>
-<input type="text" ng-model="user.firstName">
-<br>
-<input type="text" ng-model="user.lastName">
-<br>
-<input type="email" ng-model="user.email">
-<br>
-<input type="text" ng-model="user.type">
-<br>
-<input type="button" ng-click="addUser(user)" value="Create new user">
-<hr>
-
-<section class="user-list container">
-    <div class="user-list--card title">
-        <div class="user-list--item">Username</div>
-        <div class="user-list--item">First name</div>
-        <div class="user-list--item">Last name</div>
-        <div class="user-list--item">Email</div>
-        <div class="user-list--item">Type</div>
-    </div>
-    <div class="user-list--card" ng-repeat="user in users">
-        <div class="user-list--item">
-            <a href="#!user/{{user.userName}}">{{ user.userName }}</a>
+    <!-- Form for adding/editing users -->
+    <div ng-if="showForm" class="user-form">
+        <!-- Display user's first name and last name if editing an existing user -->
+        <h2>{{ editingUser ? 'Edit User' : 'Create New User' }}</h2>
+        
+        <div ng-if="editingUser">
+            {{ editingUser.firstName }} {{ editingUser.lastName }}
         </div>
-        <div class="user-list--item">{{ user.firstName }}</div>
-        <div class="user-list--item">{{ user.lastName }}</div>
-        <div class="user-list--item">{{ user.email }}</div>
-        <div class="user-list--item">{{ user.type }}</div>
+        
+        <input type="text" ng-model="user.userName" placeholder="Username" required>
+        <br>
+        <input type="text" ng-model="user.firstName" placeholder="First Name" required>
+        <br>
+        <input type="text" ng-model="user.lastName" placeholder="Last Name" required>
+        <br>
+        <input type="email" ng-model="user.email" placeholder="Email" required>
+        <br>
+        <input type="text" ng-model="user.type" placeholder="Type" required>
+        <br>
+        <input type="password" ng-model="user.password" placeholder="Password" required>
+        <br>
+        <input type="password" ng-model="user.repeatPassword" placeholder="Repeat Password" required>
+        <br>
+        <div ng-if="editingUser">
+            <button ng-click="deleteUser(editingUser.id)">Delete</button>
+        </div>
+        <button ng-click="addUser(user)">Save</button>
     </div>
-</section>
+
+    <!-- User list -->
+    <section class="user-list container">
+        <div class="user-list--card title">
+            <div class="user-list--item">Username</div>
+            <div class="user-list--item">First name</div>
+            <div class="user-list--item">Last name</div>
+            <div class="user-list--item">Email</div>
+            <div class="user-list--item">Type</div>
+        </div>
+        <div class="user-list--card" ng-repeat="user in users">
+            <div class="user-list--item" ng-click="openForm(user)">
+                <a href="#!user/{{user.userName}}">{{ user.userName }}</a>
+            </div>
+            <div class="user-list--item">{{ user.firstName }}</div>
+            <div class="user-list--item">{{ user.lastName }}</div>
+            <div class="user-list--item">{{ user.email }}</div>
+            <div class="user-list--item">{{ user.type }}</div>
+        </div>
+    </section>
+</div>

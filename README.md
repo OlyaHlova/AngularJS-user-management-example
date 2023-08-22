@@ -14,3 +14,5 @@ Next dependencies should be instaled:
 User list page and User view page inplemented. Clik on user name on the User list page to navigate to User view page.
 
 Backend server emulated for CRED operations.
+Run command to get users data:
+$ node backend.js
