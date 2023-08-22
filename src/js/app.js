@@ -6,8 +6,15 @@ angular.module('exampleApp', [
     function ($routeProvider) {
         $routeProvider
             .when('/', {
-                templateUrl: 'views/home.html',
-                controller: 'HomeCtrl'
-            });
+                templateUrl: 'views/userList.html',
+                controller: 'UserCtrl'
+            })
+            .when('/user/:userName', {
+                templateUrl: 'views/userView.html',
+                controller: 'UserCtrl'
+            })
+            .otherwise({
+                templateUrl: 'views/errors/not-found-page.html',
+            })
     }
-]);
+])

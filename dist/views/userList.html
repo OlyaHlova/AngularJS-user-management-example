@@ -1,0 +1,51 @@
+<a href="#!user">User</a>
+<br>
+<a href="#!users/userName">User name</a>
+
+<div id="{{ userName }}">{{ userName }}</div>
+<p>{{message}}</p>
+
+<div ng-controller='formCtrl'>
+    <h2>Create new user</h2>
+    <div>Username</div>
+    <input type="text" ng-model="userName">
+    {{userName + "user Name"}}
+    <br>
+    <input type="text" ng-model="inputData">
+    {{inputData + " custom string"}}
+    <br>
+    <button ng-click='createUser(userName)'>Create User</button>
+</div>
+
+<hr>
+<input type="text" ng-model="user.userName">
+<br>
+<input type="text" ng-model="user.firstName">
+<br>
+<input type="text" ng-model="user.lastName">
+<br>
+<input type="email" ng-model="user.email">
+<br>
+<input type="text" ng-model="user.type">
+<br>
+<input type="button" ng-click="addUser(user)" value="Create new user">
+<hr>
+
+<section class="user-list container">
+    <div class="user-list--card title">
+        <div class="user-list--item">Username</div>
+        <div class="user-list--item">First name</div>
+        <div class="user-list--item">Last name</div>
+        <div class="user-list--item">Email</div>
+        <div class="user-list--item">Type</div>
+    </div>
+    <div class="user-list--card" ng-repeat="user in users">
+        <div class="user-list--item">
+            <a href="#!user/{{user.userName}}">{{ user.userName }}</a>
+        </div>
+        <div class="user-list--item">{{ user.firstName }}</div>
+        <div class="user-list--item">{{ user.lastName }}</div>
+        <div class="user-list--item">{{ user.email }}</div>
+        <div class="user-list--item">{{ user.type }}</div>
+    </div>
+</section>

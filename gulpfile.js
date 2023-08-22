@@ -13,8 +13,8 @@ const browserSync = browserSynchronization.create();
 
 gulp.task('css', function () {
     return gulp.src(styles)
-        .pipe(concat('main.css'))
-        .pipe(gulp.dest('./dist/css'))
+        .pipe(concat('all.css'))
+        .pipe(gulp.dest('./dist/styles'))
         .pipe(browserSync.reload({
             stream: true
         }));

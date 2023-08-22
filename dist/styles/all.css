@@ -1,0 +1,56 @@
+body {
+    background-color: var(--body--bg-color);
+}
+
+.container {
+    background-color: var(--container--bg-color); 
+}
+
+.user-list--card {
+    display: grid;
+    grid-template-columns: 25% 15% 15% 25% auto;
+    gap: 16px;
+    align-items: center;
+    overflow-wrap: anywhere;
+    margin-bottom: 2px;
+}
+
+.user-list--card { 
+    padding: 22px 26px 21px;
+}
+
+.user-list--card:not(.title) {
+    background-color: var(--user-card--bg-color); 
+}
+
+.user-list--card:not(.title):active,
+.user-list--card:not(.title):hover,
+.user-list--card:not(.title):focus {
+    background-color: var(--user-card--bg-color--highlight);
+}
+
+.user-list--card.title {
+    text-transform: uppercase;
+}
+
+a {
+    text-decoration: inherit;
+    color: inherit;
+}
+
+a:hover,
+a:focus {
+    color: var(--user-link--text-color--highlight);
+}
+body {
+
+    /* Color variables: */
+
+    --body--bg-color:                    #EEF0F8;
+    --container--bg-color:               #FFFFFF;
+    --user-card--bg-color:               #F4F5F8;
+    --user-card--bg-color--highlight:    #EFF0F4;
+
+    --user-link--text-color--highlight:  rgb(76, 76, 247);
+
+}

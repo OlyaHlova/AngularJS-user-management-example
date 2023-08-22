@@ -1,0 +1,12 @@
+body {
+
+    /* Color variables: */
+
+    --body--bg-color:                    #EEF0F8;
+    --container--bg-color:               #FFFFFF;
+    --user-card--bg-color:               #F4F5F8;
+    --user-card--bg-color--highlight:    #EFF0F4;
+
+    --user-link--text-color--highlight:  rgb(76, 76, 247);
+
+}
