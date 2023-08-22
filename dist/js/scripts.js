@@ -37873,7 +37873,7 @@ angular.module('exampleApp', [
     function ($routeProvider) {
         $routeProvider
             .when('/', {
-                templateUrl: 'views/userList.html',
+                templateUrl: 'views/user-list.html',
                 controller: 'UserCtrl'
             })
             .when('/user/:userName', {
@@ -37892,14 +37892,15 @@ angular.module('exampleApp', [
     }
 ])
 
+
+
 angular.module('exampleApp')
 .controller('UserCtrl', [
     '$scope',
     '$routeParams',
-    '$http',
-    '$location',
-    function ($scope, $routeParams, $http, $location) {
-        $scope.message = 'message';
+    'UserService',
+    function ($scope, $routeParams, UserService) {
+        
         $scope.userName = $routeParams.userName;
         console.log('$routeParams', $routeParams.userName);
 
@@ -37916,152 +37917,184 @@ angular.module('exampleApp')
         // Toggle form visibility
         $scope.toggleForm = function() {
             $scope.showForm = !$scope.showForm;
-            $scope.editingUser = null; // Reset editingUser when toggling the form
+            $scope.editingUser = null;
         };
 
-        // Handle request error function
-        function handleRequestError(error) {
-            console.log('error', error.status);
-            if (error.status === 403) {
-                $location.path('/403');
-            } else if (error.status === 404) {
-                $location.path('/404');
-            }
-        }
-
-
-        // Fetch users from API
-        $http.get('http://localhost:3002/users')
-            .then(function (response) {
-                console.log('success', response.status);
-                $scope.users = response.data;
-            })
-            .catch(handleRequestError);
+        $scope.userName = $routeParams.userName;
 
         // Fetch separate user from API
-        $scope.getUser = function (userName) {
-            $http.get('http://localhost:3002/users/' + userName)
-                .then(function (response) {
-                    console.log('success init', response.data);
-                    $scope.user = response.data; // Assign fetched user data to $scope.user
+        if ($scope.userName) {
+            UserService.getUser($scope.userName)
+                .then(function(user) {
+                    $scope.user = user;
                 })
                 .catch(function (error) {
                     console.log('Error fetching user data:', error);
-                    // Handle the error, such as setting $scope.user to null or showing an error message in the UI
+                    // Handle the error, such as showing an error message in the UI
                 });
         }
-        
-        // Automatically fetch user data when the page initializes
-        if ($routeParams.userName) {
-            $scope.getUser($routeParams.userName);
-        }
-        
-        // Add user function
-        $scope.addUser = function (user) {
-            console.log("user", user);
-            $http.post('http://localhost:3002/users', user)
-                .then(function (result) {
-                    console.log('success SAVED', result);
-                    $scope.users.push(user);
-                    $scope.user = null;
-                })
-                .catch(handleRequestError);
-        }
 
-        // Edit user function
-        $scope.editUser = function (user) {
-            $scope.editingUser = angular.copy(user);
-        };
-
-        // Save edited user function
-        $scope.saveEditedUser = function () {
-            $http.put('http://localhost:3002/users/' + $scope.editingUser.id, $scope.editingUser)
-                .then(function (response) {
-                    console.log('User updated successfully');
-                    const index = $scope.users.findIndex(u => u.id === $scope.editingUser.id);
-                    if (index !== -1) {
-                        $scope.users[index] = angular.copy($scope.editingUser);
-                    }
-                    $scope.editingUser = null;
-                })
-                .catch(function (error) {
-                    console.log('Error updating user:', error);
-                });
-        };
+        // Fetch users from API
+        UserService.fetchUsers()
+            .then(function() {
+                $scope.users = UserService.getUsers();
+            })
+            .catch(function(error) {
+                console.log('Error fetching users:', error);
+            });
 
         // Delete user function
-        $scope.deleteUser = function (id) {
+        $scope.deleteUser = function(id) {
             if (confirm("Are you sure you want to delete this user?")) {
-                $http.delete('http://localhost:3002/users/' + id)
-                    .then(function (response) {
-                        console.log('User deleted successfully');
-                        const index = $scope.users.findIndex(u => u.id === id);
-                        if (index !== -1) {
-                            $scope.users.splice(index, 1);
-                            $scope.showForm = false; // Close the form after deletion
-                        }
+                UserService.deleteUser(id)
+                    .then(function() {
+                        // Remove the user from the displayed list
+                        $scope.users = $scope.users.filter(user => user.id !== id);
                     })
-                    .catch(function (error) {
+                    .catch(function(error) {
                         console.log('Error deleting user:', error);
                     });
             }
         };
-        
     }
 ]);
 angular.module('exampleApp')
 .controller('UserFormCtrl', [
     '$scope',
-    '$http',
-    function ($scope, $http) {
-        $scope.addUser = function (user) {
-            console.log("user", user);
-            $http.post('http://localhost:3002/users', user)
-                .then(function (result) {
-                    console.log('success SAVED', result);
-                    $scope.users.push(user);
+    'UserService',
+    function ($scope, UserService) {
+        // Initialize an empty editingUser object
+        // $scope.editingUser = {};
+
+        // Add user function
+        $scope.addUser = function(user) {
+            UserService.addUser(user)
+                .then(function(newUser) {
                     $scope.user = null;
+                    // Add the new user to the displayed list
+                    $scope.users.push(newUser);
+                    // $scope.users = null;
+
                 })
-                .catch(handleRequestError);
-        }
+                .catch(function(error) {
+                    console.log('Error adding user:', error);
+                });
+        };
 
         // Edit user function
-        $scope.editUser = function (user) {
+        $scope.editUser = function(user) {
+            // Deep copy the user object to editingUser
             $scope.editingUser = angular.copy(user);
+            // Set the editingUser's id to the user's id
+            $scope.editingUser.id = user.id;
         };
 
         // Save edited user function
-        $scope.saveEditedUser = function () {
-            $http.put('http://localhost:3002/users/' + $scope.editingUser.id, $scope.editingUser)
-                .then(function (response) {
-                    console.log('User updated successfully');
+        $scope.saveEditedUser = function() {
+            // Make sure the form data is correctly mapped to the editingUser object
+            $scope.editingUser.userName = $scope.user.userName;
+            $scope.editingUser.firstName = $scope.user.firstName;
+            $scope.editingUser.lastName = $scope.user.lastName;
+            $scope.editingUser.email = $scope.user.email;
+            $scope.editingUser.type = $scope.user.type;
+
+            UserService.updateUser($scope.editingUser)
+                .then(function() {
+                    // Find the index of the edited user in the displayed list
                     const index = $scope.users.findIndex(u => u.id === $scope.editingUser.id);
                     if (index !== -1) {
+                        // Update the user in the displayed list
                         $scope.users[index] = angular.copy($scope.editingUser);
                     }
-                    $scope.editingUser = null;
+                    // Clear the editingUser object
+                    $scope.editingUser = {};
+                    console.log('User was edited');
                 })
-                .catch(function (error) {
+                .catch(function(error) {
                     console.log('Error updating user:', error);
                 });
         };
 
         // Delete user function
-        $scope.deleteUser = function (id) {
+        $scope.deleteUser = function(id) {
             if (confirm("Are you sure you want to delete this user?")) {
-                $http.delete('http://localhost:3002/users/' + id)
-                    .then(function (response) {
-                        console.log('User deleted successfully');
-                        const index = $scope.users.findIndex(u => u.id === id);
-                        if (index !== -1) {
-                            $scope.users.splice(index, 1);
-                            $scope.showForm = false; // Close the form after deletion
-                        }
+                UserService.deleteUser(id)
+                    .then(function() {
+                        // Remove the user from the displayed list
+                        $scope.users = $scope.users.filter(user => user.id !== id);
                     })
-                    .catch(function (error) {
+                    .catch(function(error) {
                         console.log('Error deleting user:', error);
                     });
             }
         };
     }
 ]);
+angular.module('exampleApp')
+.factory('UserService', ['$http', function($http) {
+    var users = [];
+
+    return {
+        getUsers: function() {
+            return users;
+        },
+        setUsers: function(newUsers) {
+            users = newUsers;
+        },
+        fetchUsers: function() {
+            return $http.get('http://localhost:3002/users')
+                .then(function(response) {
+                    users = response.data;
+                })
+                .catch(function(error) {
+                    console.log('Error fetching users:', error);
+                });
+        },
+        getUser: function(userName) {
+            return $http.get('http://localhost:3002/users/' + userName)
+                .then(function(response) {
+                    return response.data;
+                })
+                .catch(function(error) {
+                    console.log('Error fetching user:', error);
+                    throw error;
+                });
+        },
+        updateUser: function(user) {
+            return $http.put('http://localhost:3002/users/' + user.id, user)
+                .then(function(response) {
+                    var index = users.findIndex(u => u.id === user.id);
+                    if (index !== -1) {
+                        users[index] = angular.copy(user);
+                    }
+                    console.log('User updated successfully');
+                })
+                .catch(function(error) {
+                    console.log('Error updating user:', error);
+                });
+        },
+        deleteUser: function(id) {
+            return $http.delete('http://localhost:3002/users/' + id)
+                .then(function(response) {
+                    var index = users.findIndex(u => u.id === id);
+                    if (index !== -1) {
+                        users.splice(index, 1);
+                    }
+                    console.log('User deleted successfully');
+                })
+                .catch(function(error) {
+                    console.log('Error deleting user:', error);
+                });
+        },
+        addUser: function(user) {
+            return $http.post('http://localhost:3002/users', user)
+                .then(function(response) {
+                    users.push(response.config.data);
+                    console.log('User added successfully', response);
+                })
+                .catch(function(error) {
+                    console.log('Error adding user:', error);
+                });
+        }
+    };
+}]);

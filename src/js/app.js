@@ -6,7 +6,7 @@ angular.module('exampleApp', [
     function ($routeProvider) {
         $routeProvider
             .when('/', {
-                templateUrl: 'views/userList.html',
+                templateUrl: 'views/user-list.html',
                 controller: 'UserCtrl'
             })
             .when('/user/:userName', {
@@ -24,3 +24,5 @@ angular.module('exampleApp', [
             })
     }
 ])
+
+

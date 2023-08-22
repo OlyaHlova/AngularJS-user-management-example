@@ -5,7 +5,7 @@
     class="user-form" 
     ng-init="initForm(users)" 
     ng-submit="editingUser ? saveEditedUser() : addUser(user)">
-                <!-- <div ng-controller="UserFormCtrl" ng-if="showForm" class="user-form" ng-init="initForm(users)"> -->
+    
     <h2>{{ editingUser ? 'Edit User' : 'Create New User' }}</h2>
     
     <div ng-if="editingUser">
