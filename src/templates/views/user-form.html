@@ -1,0 +1,27 @@
+<!-- Form for adding/editing/deleting users -->
+<div ng-controller="UserFormCtrl" ng-if="showForm" class="user-form">
+    <h2>{{ editingUser ? 'Edit User' : 'Create New User' }}</h2>
+    
+    <div ng-if="editingUser">
+        {{ editingUser.firstName }} {{ editingUser.lastName }}
+    </div>
+    
+    <input type="text" ng-model="user.userName" placeholder="Username" required>
+    <br>
+    <input type="text" ng-model="user.firstName" placeholder="First Name" required>
+    <br>
+    <input type="text" ng-model="user.lastName" placeholder="Last Name" required>
+    <br>
+    <input type="email" ng-model="user.email" placeholder="Email" required>
+    <br>
+    <input type="text" ng-model="user.type" placeholder="Type" required>
+    <br>
+    <input type="password" ng-model="user.password" placeholder="Password" required>
+    <br>
+    <input type="password" ng-model="user.repeatPassword" placeholder="Repeat Password" required>
+    <br>
+    <div ng-if="editingUser">
+        <button ng-click="deleteUser(editingUser.id)">Delete</button>
+    </div>
+    <button ng-click="addUser(user)">Save</button>
+</div>

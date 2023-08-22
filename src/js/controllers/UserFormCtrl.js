@@ -1,5 +1,5 @@
 angular.module('exampleApp')
-.controller('FormCtrl', [
+.controller('UserFormCtrl', [
     '$scope',
     '$http',
     function ($scope, $http) {

@@ -10,7 +10,7 @@ angular.module('exampleApp', [
                 controller: 'UserCtrl'
             })
             .when('/user/:userName', {
-                templateUrl: 'views/userView.html',
+                templateUrl: 'views/user-view.html',
                 controller: 'UserCtrl'
             })
             .when('/403', {

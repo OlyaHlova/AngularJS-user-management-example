@@ -35,6 +35,7 @@ angular.module('exampleApp')
             }
         }
 
+
         // Fetch users from API
         $http.get('http://localhost:3002/users')
             .then(function (response) {
@@ -52,7 +53,7 @@ angular.module('exampleApp')
                 })
                 .catch(function (error) {
                     console.log('Error fetching user data:', error);
-                    // You can handle the error here, such as setting $scope.user to null or showing an error message in the UI
+                    // Handle the error, such as setting $scope.user to null or showing an error message in the UI
                 });
         }
         

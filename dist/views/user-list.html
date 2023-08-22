@@ -3,7 +3,7 @@
     <button ng-click="toggleForm()">Create User</button>
 
     <!-- Form for adding/editing users -->
-    <div ng-if="showForm" class="user-form">
+    <div ng-controller="UserFormCtrl" ng-if="showForm" class="user-form">
         <!-- Display user's first name and last name if editing an existing user -->
         <h2>{{ editingUser ? 'Edit User' : 'Create New User' }}</h2>
         
