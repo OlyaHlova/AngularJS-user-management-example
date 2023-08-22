@@ -1,27 +1,55 @@
 <!-- Form for adding/editing/deleting users -->
-<div ng-controller="UserFormCtrl" ng-if="showForm" class="user-form">
+<form name="userForm" 
+    ng-controller="UserFormCtrl" 
+    ng-if="showForm" 
+    class="user-form" 
+    ng-init="initForm(users)" 
+    ng-submit="editingUser ? saveEditedUser() : addUser(user)">
+                <!-- <div ng-controller="UserFormCtrl" ng-if="showForm" class="user-form" ng-init="initForm(users)"> -->
     <h2>{{ editingUser ? 'Edit User' : 'Create New User' }}</h2>
     
     <div ng-if="editingUser">
         {{ editingUser.firstName }} {{ editingUser.lastName }}
     </div>
     
-    <input type="text" ng-model="user.userName" placeholder="Username" required>
-    <br>
-    <input type="text" ng-model="user.firstName" placeholder="First Name" required>
-    <br>
-    <input type="text" ng-model="user.lastName" placeholder="Last Name" required>
-    <br>
-    <input type="email" ng-model="user.email" placeholder="Email" required>
-    <br>
-    <input type="text" ng-model="user.type" placeholder="Type" required>
-    <br>
-    <input type="password" ng-model="user.password" placeholder="Password" required>
-    <br>
-    <input type="password" ng-model="user.repeatPassword" placeholder="Repeat Password" required>
-    <br>
-    <div ng-if="editingUser">
-        <button ng-click="deleteUser(editingUser.id)">Delete</button>
+    <div class="form-field">
+        <label for="userName" class="form-field__label">Username</label>
+        <input type="text" ng-model="user.userName" name="userName" id="userName" class="form-field__input" required>
     </div>
-    <button ng-click="addUser(user)">Save</button>
-</div>
+    <div class="form-field">
+        <label for="firstName" class="form-field__label">First Name</label>
+        <input type="text" ng-model="user.firstName" name="firstName" id="firstName" class="form-field__input" required>
+    </div>
+    <div class="form-field">
+        <label for="lastName" class="form-field__label">Last Name</label>
+        <input type="text" ng-model="user.lastName" name="lastName" id="lastName" class="form-field__input" required>
+    </div>
+    <div class="form-field">
+        <label for="email" class="form-field__label">Email</label>
+        <input type="email" ng-model="user.email" name="email" id="email" class="form-field__input" required>
+    </div>
+    <div class="form-field">
+        <label for="type" class="form-field__label">Type</label>
+        <input type="text" ng-model="user.type" name="type" id="type" class="form-field__input" required>
+    </div>
+    <div class="form-field">
+        <label for="password" class="form-field__label">Password</label>
+        <input type="password" ng-model="user.password" name="password" id="password" class="form-field__input" required>
+    </div>
+    <div class="form-field">
+        <label for="repeatPassword" class="form-field__label">Repeat Password</label>
+        <input type="password" ng-model="user.repeatPassword" name="repeatPassword" id="repeatPassword" class="form-field__input" required>
+    </div>
+    
+    <div ng-if="editingUser">
+        <button ng-click="deleteUser(editingUser.id)" class="btn btn-danger">Delete</button>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ editingUser ? 'Save Changes' : 'Save' }}</button>
+    </div>
+    
+    <!-- Display form validation errors -->
+    <div ng-show="userForm.$invalid" class="error-message">
+        Please fill out all required fields and ensure passwords match.
+    </div>
+</form>
