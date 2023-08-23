@@ -60,21 +60,21 @@
         <div class="form-field">
             <label for="password" class="form-field__label">Password</label>
             <input type="password" ng-model="user.password" name="password" id="password" class="form-field__input" required>
-            <div ng-if="userForm.password.$error.required && (userForm.password.$touched || userForm.$submitted)" class="error-message__invalid">
-                Password is required.
-            </div>
-            <div ng-if="userForm.password.$error.passwordValidation && (userForm.password.$touched || userForm.$submitted)" class="">
-                Password must be at least 8 characters long and contain at least one letter and one number.
+            <div ng-messages="userForm.password.$error" 
+                 ng-if="userForm.password.$error.required && (userForm.password.$touched || userForm.$submitted)"
+                 class="error-message__invalid">
+                <div ng-message="required">Password is required.</div>
+                <div ng-message="passwordValidation">Password must be at least 8 characters long and contain at least one letter and one number.</div>
             </div>
         </div>
         <div class="form-field">
             <label for="repeatPassword" class="form-field__label">Repeat Password</label>
             <input type="password" ng-model="user.repeatPassword" name="repeatPassword" id="repeatPassword" class="form-field__input" required>
-            <div ng-if="userForm.repeatPassword.$error.required && (userForm.repeatPassword.$touched || userForm.$submitted)" class="error-message__invalid">
-                Repeat password is required.
-            </div>
-            <div ng-if="userForm.repeatPassword.$error.compareTo && (userForm.repeatPassword.$touched || userForm.$submitted)" class="error-message__invalid">
-                Passwords do not match.
+            <div ng-messages="userForm.repeatPassword.$error"
+                ng-if="userForm.repeatPassword.$error && (userForm.repeatPassword.$touched  || userForm.$submitted)"
+                class="error-message__invalid">
+                <div ng-message="required">Repeat password is required.</div>
+                <div ng-message="compareTo">Passwords do not match.</div>
             </div>
         </div>
 
