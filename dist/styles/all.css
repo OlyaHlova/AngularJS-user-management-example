@@ -171,6 +171,18 @@ a:focus {
     position: relative;
 }
 
+.form-field__input.ng-invalid.ng-touched {
+    border: 1px solid red;
+}
+
+.form-field__input:focus-visible {
+    border: none;
+}
+
+.error-message__invalid {
+    color: red; 
+}
+
 .email__input {
     width: calc(100% - (46px + 16px));
     padding-left: 46px;
@@ -190,7 +202,6 @@ a:focus {
     display: flex;
     justify-content: space-between;
     gap: 16px;
-    flex-wrap: wrap-reverse;
 }
 
 body {
