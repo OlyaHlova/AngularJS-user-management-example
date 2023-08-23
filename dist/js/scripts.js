@@ -37956,6 +37956,7 @@ angular.module('exampleApp')
         $scope.serverErrors = [];
         $scope.successMessage = '';
         $scope.errorMessage = '';
+        $scope.formSubmitted = false; // New flag for form submission
 
         $scope.closeStatusMessage = function() {
             $scope.successMessage = '';
@@ -38028,7 +38029,7 @@ angular.module('exampleApp')
             $scope.editingUser.email = $scope.user.email;
             $scope.editingUser.type = $scope.user.type;
             $scope.editingUser.password = $scope.user.password;
-           
+
             UserService.updateUser($scope.editingUser)
                 .then(function() {
                     const index = $scope.users.findIndex(u => u.id === $scope.editingUser.id);
