@@ -1,9 +1,19 @@
+.message__container {
+    position: relative;
+}
+
 .status-message {
     width: 230px;
     height: 14px;
     padding: 21px 26px;
     font-size: 13px;
     line-height: 16px;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.status-message.ng-hide {
+    opacity: 0;
 }
 
 .success-message {
@@ -48,6 +58,8 @@ body {
     background-color: var(--body--bg-color);
     color: var(--main--text--color);
     font-family: var(--main--font-family);
+    font-size: 13px;
+    line-height: 16px;
 }
 
 .main__content {
@@ -61,7 +73,7 @@ body {
 
 .container {
     background-color: var(--container--bg-color);
-    height: var(--content--height); 
+    /* height: var(--content--height);  */
     /* overflow-y: auto; */
 }
 
@@ -105,8 +117,15 @@ body {
     background-color: var(--user-card--bg-color--highlight);
 }
 
-.user-list__card.title {
+/* .user-list__card.title {
     text-transform: uppercase;
+    color: var(--title-secondary--color);
+    font-weight: bold;
+} */
+.secondary-title {
+    text-transform: uppercase;
+    color: var(--title-secondary--color);
+    font-weight: bold;
 }
 
 a {
@@ -136,11 +155,35 @@ a:focus {
     font-size: 16px;
     font-weight: bold;
     line-height: 19px;
+    margin-bottom: 29px;
+}
+
+.form-field {
+    margin-bottom: 16px;
+    position: relative;
 }
 
 .form-field__input{
-    width: 100%;
-    padding: 0;
+    width: calc(100% - 32px);
+    padding: 16px;
+    background: var(--input--iner--color);
+    border: none;
+    border-radius: 6px;
+    position: relative;
+}
+
+.email__input {
+    width: calc(100% - (46px + 16px));
+    padding-left: 46px;
+}
+
+.email__char::before {
+    content: '@';
+    position: absolute;
+    left: 16px;
+    top: 30px;
+    font-size: 24px;
+    color: #c8c6c6;
 }
 
 .form-actions {
@@ -162,6 +205,7 @@ body {
     --user-card--bg-color--highlight:    #EFF0F4;
 
     --main--text--color:                 #3F4254;
+    --title-secondary--color:            #A4A4B5;
     --main--text--light:                  var(--main--white);
 
     --user-link--color--highlight:        #3a2dcd;
@@ -171,6 +215,7 @@ body {
     --btn-primary--color:                 #2E8FF0;
     --btn-danger--color:                  #F44682;
 
+    --input--iner--color:                 #F3F6F9;
 
     /* Shadows */
 

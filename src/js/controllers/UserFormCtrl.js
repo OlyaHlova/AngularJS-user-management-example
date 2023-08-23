@@ -2,19 +2,18 @@ angular.module('exampleApp')
 .controller('UserFormCtrl', [
     '$scope',
     'UserService',
-    function ($scope, UserService) {
+    '$timeout',
+    function ($scope, UserService, $timeout) {
 
-        // Initialize passwordValidationError
         $scope.passwordValidationError = false;
-
-        // Initialize serverErrors
         $scope.serverErrors = [];
-        
-        // Initialize successMessage
         $scope.successMessage = '';
-        // $scope.successMessage = '111';
         $scope.errorMessage = '';
-        // $scope.errorMessage = '1000';
+
+        $scope.closeStatusMessage = function() {
+            $scope.successMessage = '';
+            $scope.errorMessage = '';
+        };
 
         function resetFormErrors() {
             $scope.passwordValidationError = false;
@@ -43,18 +42,20 @@ angular.module('exampleApp')
             }
 
             UserService.addUser(user)
-                .then(function(newUser) {      
+                .then(function(newUser) {
                     resetUserForm();
                     $scope.users.push(newUser);
                     resetFormErrors();
                     $scope.successMessage = 'User added successfully.';
+                    $timeout($scope.closeStatusMessage, 5000);
                 })
                 .catch(function(error) {
                     console.log('Error adding user:', error);
                     if (error.data && error.data.errors) {
                         $scope.serverErrors = error.data.errors;
                     }
-                    $scope.errorMessage = 'error Message';
+                    $scope.errorMessage = 'Error adding user.';
+                    $timeout($scope.closeStatusMessage, 5000);
                 });
         };
 
@@ -63,9 +64,9 @@ angular.module('exampleApp')
             $scope.editingUser.id = user.id;
         };
 
-        $scope.saveEditedUser = function() {            
-            if (!$scope.user){
-                return
+        $scope.saveEditedUser = function() {
+            if (!$scope.user) {
+                return;
             }
 
             if ($scope.passwordValidationError || $scope.serverErrors.length > 0) {
@@ -78,7 +79,7 @@ angular.module('exampleApp')
             $scope.editingUser.email = $scope.user.email;
             $scope.editingUser.type = $scope.user.type;
             $scope.editingUser.password = $scope.user.password;
-
+           
             UserService.updateUser($scope.editingUser)
                 .then(function() {
                     const index = $scope.users.findIndex(u => u.id === $scope.editingUser.id);
@@ -89,13 +90,15 @@ angular.module('exampleApp')
                     resetFormErrors();
                     console.log('User was edited');
                     $scope.successMessage = 'User updated successfully.';
+                    $timeout($scope.closeStatusMessage, 5000);
                 })
                 .catch(function(error) {
                     console.log('Error updating user:', error);
                     if (error.data && error.data.errors) {
                         $scope.serverErrors = error.data.errors;
                     }
-                    $scope.errorMessage = 'error Message';
+                    $scope.errorMessage = 'Error updating user.';
+                    $timeout($scope.closeStatusMessage, 5000);
                 });
         };
 
@@ -106,10 +109,12 @@ angular.module('exampleApp')
                         resetFormErrors;
                         $scope.users = $scope.users.filter(user => user.id !== id);
                         $scope.successMessage = 'User deleted successfully.';
+                        $timeout($scope.closeStatusMessage, 5000);
                     })
                     .catch(function(error) {
                         console.log('Error deleting user:', error);
-                        $scope.errorMessage = 'error Message';
+                        $scope.errorMessage = 'Error deleting user.';
+                        $timeout($scope.closeStatusMessage, 5000);
                     });
             }
         };

@@ -9,6 +9,7 @@ body {
     --user-card--bg-color--highlight:    #EFF0F4;
 
     --main--text--color:                 #3F4254;
+    --title-secondary--color:            #A4A4B5;
     --main--text--light:                  var(--main--white);
 
     --user-link--color--highlight:        #3a2dcd;
@@ -18,6 +19,7 @@ body {
     --btn-primary--color:                 #2E8FF0;
     --btn-danger--color:                  #F44682;
 
+    --input--iner--color:                 #F3F6F9;
 
     /* Shadows */
 

@@ -1,9 +1,19 @@
+.message__container {
+    position: relative;
+}
+
 .status-message {
     width: 230px;
     height: 14px;
     padding: 21px 26px;
     font-size: 13px;
     line-height: 16px;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.status-message.ng-hide {
+    opacity: 0;
 }
 
 .success-message {

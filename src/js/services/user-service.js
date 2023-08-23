@@ -61,10 +61,6 @@ angular.module('exampleApp')
                             console.log('Error updating user:', error);
                             throw error;
                         });
-                // })
-                // .catch(function(error) {
-                //     return $q.reject(error);
-                // });
         },
         deleteUser: function(id) {
             return $http.delete('http://localhost:3002/users/' + id)

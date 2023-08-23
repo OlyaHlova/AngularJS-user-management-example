@@ -9,9 +9,8 @@ angular.module('exampleApp')
 
         $scope.openForm = function(user) {
             $scope.showForm = true;
-            
-                $scope.editingUser = angular.copy(user);
-                $scope.user = $scope.editingUser;
+            $scope.editingUser = angular.copy(user);
+            $scope.user = $scope.editingUser;
         };
 
         $scope.openCreateForm = function() {
