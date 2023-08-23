@@ -1,27 +1,31 @@
-<div>
-    <!-- Button to toggle form visibility -->
-    <button ng-click="toggleForm()">Create User</button>
+<div class="main__content">
+    <div class="user__content">
+        <button class="btn btn-primary" ng-click="openCreateForm()">Create User</button>
 
-    <!-- Link to the form HTML file -->
-    <div ng-include="'views/user-form.html'"></div>
-
-    <!-- User list -->
-    <section class="user-list container">
-        <div class="user-list--card title">
-            <div class="user-list--item">Username</div>
-            <div class="user-list--item">First name</div>
-            <div class="user-list--item">Last name</div>
-            <div class="user-list--item">Email</div>
-            <div class="user-list--item">Type</div>
-        </div>
-        <div class="user-list--card" ng-init="getUser(userName)" ng-repeat="user in users">
-            <div class="user-list--item" ng-click="openForm(user)">
-                <a href="#!/user/{{user.userName}}">{{ user.userName }}</a>
+        <!-- User list -->
+        <section class="user-list container">
+            <div class="user-list__card title">
+                <div class="user-list__item">Username</div>
+                <div class="user-list__item">First name</div>
+                <div class="user-list__item">Last name</div>
+                <div class="user-list__item">Email</div>
+                <div class="user-list__item">Type</div>
             </div>
-            <div class="user-list--item">{{ user.firstName }}</div>
-            <div class="user-list--item">{{ user.lastName }}</div>
-            <div class="user-list--item">{{ user.email }}</div>
-            <div class="user-list--item">{{ user.type }}</div>
-        </div>
-    </section>
+            <div class="user-list__card" ng-init="getUser(userName)" ng-repeat="user in users" ng-click="openForm(user)">
+                <div class="user-list__item">
+                    <a href="#!/user/{{user.userName}}">{{ user.userName }}</a>
+                </div>
+                <div class="user-list__item">{{ user.firstName }}</div>
+                <div class="user-list__item">{{ user.lastName }}</div>
+                <div class="user-list__item">{{ user.email }}</div>
+                <div class="user-list__item">{{ user.type }}</div>
+            </div>
+        </section>
+    </div>
+
+    <div class="user-action__content">
+        <!-- Link to the form HTML file -->
+        <div ng-include="'views/user-form.html'"></div>
+    </div>
+
 </div>

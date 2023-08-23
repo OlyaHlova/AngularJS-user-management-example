@@ -1,12 +1,88 @@
+.status-message {
+    width: 230px;
+    height: 14px;
+    padding: 21px 26px;
+    font-size: 13px;
+    line-height: 16px;
+}
+
+.success-message {
+    color: var(--main--text--light);
+    background-color: var(--message--success--color);
+    box-shadow: var(--message--success--shadow);
+    position: fixed;
+    top: 20px;
+    left: 20px;
+}
+
+.error-message {
+    color: var(--main--text--light);
+    background-color: var(--message--error--color);
+    box-shadow: var(--message--error--shadow);
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+
+.btn {
+    height: var(--button--height);
+    width: var(--button--width);
+    color: var(--main--text--light);
+    border: none;
+    border-radius: var(--main--border--radius);
+    font-size: 14px;
+    line-height: 17px;
+}
+
+.btn-primary {
+    background-color: var(--btn-primary--color);
+    box-shadow: var(--btn-primary--shadow);
+}
+
+.btn-danger {
+    background-color: var(--btn-danger--color);
+    box-shadow: var(--btn-danger--shadow);
+}
+
 body {
     background-color: var(--body--bg-color);
+    color: var(--main--text--color);
+    font-family: var(--main--font-family);
+}
+
+.main__content {
+    display: flex;
+    gap: 26px;
+    flex-wrap: wrap-reverse;
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: var(--main--indent--top);
 }
 
 .container {
-    background-color: var(--container--bg-color); 
+    background-color: var(--container--bg-color);
+    height: var(--content--height); 
+    /* overflow-y: auto; */
 }
 
-.user-list--card {
+.user__content {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.user-action__content {
+    width: calc(30% - 26px);
+    margin-top: var(--action-container--indent--top);
+}
+
+.user-list {
+    margin-top: 16px;
+    width: 100%;
+}
+
+.user-list__card {
     display: grid;
     grid-template-columns: 25% 15% 15% 25% auto;
     gap: 16px;
@@ -15,21 +91,21 @@ body {
     margin-bottom: 2px;
 }
 
-.user-list--card { 
+.user-list__card { 
     padding: 22px 26px 21px;
 }
 
-.user-list--card:not(.title) {
+.user-list__card:not(.title) {
     background-color: var(--user-card--bg-color); 
 }
 
-.user-list--card:not(.title):active,
-.user-list--card:not(.title):hover,
-.user-list--card:not(.title):focus {
+.user-list__card:not(.title):active,
+.user-list__card:not(.title):hover,
+.user-list__card:not(.title):focus {
     background-color: var(--user-card--bg-color--highlight);
 }
 
-.user-list--card.title {
+.user-list__card.title {
     text-transform: uppercase;
 }
 
@@ -40,17 +116,84 @@ a {
 
 a:hover,
 a:focus {
-    color: var(--user-link--text-color--highlight);
+    color: var(--user-link--color--highlight);
 }
+
+.user-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 26px;
+    height: calc(var(--content--height) - 52px); 
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-title {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 19px;
+}
+
+.form-field__input{
+    width: 100%;
+    padding: 0;
+}
+
+.form-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap-reverse;
+}
+
 body {
 
     /* Color variables: */
 
+    --main--white:                       #FFFFFF;
     --body--bg-color:                    #EEF0F8;
-    --container--bg-color:               #FFFFFF;
+    --container--bg-color:               var(--main--white);
     --user-card--bg-color:               #F4F5F8;
     --user-card--bg-color--highlight:    #EFF0F4;
 
-    --user-link--text-color--highlight:  rgb(76, 76, 247);
+    --main--text--color:                 #3F4254;
+    --main--text--light:                  var(--main--white);
 
+    --user-link--color--highlight:        #3a2dcd;
+    --message--error--color:              #EF7DA0;
+    --message--success--color:            #66BB6A;
+
+    --btn-primary--color:                 #2E8FF0;
+    --btn-danger--color:                  #F44682;
+
+
+    /* Shadows */
+
+    --message--error--shadow:              0px 10px 15px #EF7DA05C;
+    --message--success--shadow:            0px 10px 15px #4CAF505C;
+    
+    --btn-primary--shadow:                 0px 5px 8px #2E8FF029;
+    --btn-danger--shadow:                  0px 5px 8px #F4468229;
+
+    
+    /* Size variables */
+
+    --content--height:                      711px;
+    --main--indent--top:                    123px;
+
+    --button--height:                       46px;
+    --button--width:                        120px;
+
+    --action-container--indent--top:        calc(var(--button--height) + 16px);
+
+    --main--border--radius:                 6px;
+
+    /* Fonts */
+
+    --main--font-family:                    Helvetica;
 }

@@ -1,0 +1,45 @@
+.status-message {
+    width: 230px;
+    height: 14px;
+    padding: 21px 26px;
+    font-size: 13px;
+    line-height: 16px;
+}
+
+.success-message {
+    color: var(--main--text--light);
+    background-color: var(--message--success--color);
+    box-shadow: var(--message--success--shadow);
+    position: fixed;
+    top: 20px;
+    left: 20px;
+}
+
+.error-message {
+    color: var(--main--text--light);
+    background-color: var(--message--error--color);
+    box-shadow: var(--message--error--shadow);
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+
+.btn {
+    height: var(--button--height);
+    width: var(--button--width);
+    color: var(--main--text--light);
+    border: none;
+    border-radius: var(--main--border--radius);
+    font-size: 14px;
+    line-height: 17px;
+}
+
+.btn-primary {
+    background-color: var(--btn-primary--color);
+    box-shadow: var(--btn-primary--shadow);
+}
+
+.btn-danger {
+    background-color: var(--btn-danger--color);
+    box-shadow: var(--btn-danger--shadow);
+}

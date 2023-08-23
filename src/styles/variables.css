@@ -2,11 +2,45 @@ body {
 
     /* Color variables: */
 
+    --main--white:                       #FFFFFF;
     --body--bg-color:                    #EEF0F8;
-    --container--bg-color:               #FFFFFF;
+    --container--bg-color:               var(--main--white);
     --user-card--bg-color:               #F4F5F8;
     --user-card--bg-color--highlight:    #EFF0F4;
 
-    --user-link--text-color--highlight:  rgb(76, 76, 247);
+    --main--text--color:                 #3F4254;
+    --main--text--light:                  var(--main--white);
 
+    --user-link--color--highlight:        #3a2dcd;
+    --message--error--color:              #EF7DA0;
+    --message--success--color:            #66BB6A;
+
+    --btn-primary--color:                 #2E8FF0;
+    --btn-danger--color:                  #F44682;
+
+
+    /* Shadows */
+
+    --message--error--shadow:              0px 10px 15px #EF7DA05C;
+    --message--success--shadow:            0px 10px 15px #4CAF505C;
+    
+    --btn-primary--shadow:                 0px 5px 8px #2E8FF029;
+    --btn-danger--shadow:                  0px 5px 8px #F4468229;
+
+    
+    /* Size variables */
+
+    --content--height:                      711px;
+    --main--indent--top:                    123px;
+
+    --button--height:                       46px;
+    --button--width:                        120px;
+
+    --action-container--indent--top:        calc(var(--button--height) + 16px);
+
+    --main--border--radius:                 6px;
+
+    /* Fonts */
+
+    --main--font-family:                    Helvetica;
 }

@@ -47,20 +47,24 @@ angular.module('exampleApp')
         },
         updateUser: function(user) {
             return validateUser(user)
-            .then(function() {
-                return $http.put('http://localhost:3002/users/' + user.id, user)
-                    .then(function(response) {
-                        var index = users.findIndex(u => u.id === user.id);
-                        if (index !== -1) {
-                            users[index] = angular.copy(user);
-                        }
-                        console.log('User updated successfully');
+                .then(function() {
+                    return $http.put('http://localhost:3002/users/' + user.id, user)
+                        .then(function(response) {
+                            var index = users.findIndex(u => u.id === user.id);
+                            if (index !== -1) {
+                                users[index] = angular.copy(user);
+                            }
+                            console.log('User updated successfully');
+                        })
                     })
-                })
-                .catch(function(error) {
-                    console.log('Error updating user:', error);
-                    throw error;
-                });
+                        .catch(function(error) {
+                            console.log('Error updating user:', error);
+                            throw error;
+                        });
+                // })
+                // .catch(function(error) {
+                //     return $q.reject(error);
+                // });
         },
         deleteUser: function(id) {
             return $http.delete('http://localhost:3002/users/' + id)

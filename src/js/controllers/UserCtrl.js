@@ -9,21 +9,22 @@ angular.module('exampleApp')
 
         $scope.openForm = function(user) {
             $scope.showForm = true;
-            $scope.editingUser = angular.copy(user);
+            
+                $scope.editingUser = angular.copy(user);
+                $scope.user = $scope.editingUser;
         };
 
-        // $scope.updateUser = function(updatedUser) {
-        //     const index = $scope.users.findIndex(u => u.id === updatedUser.id);
-        //     if (index !== -1) {
-        //         $scope.users[index] = angular.copy(updatedUser);
-        //     }
-        // };
+        $scope.openCreateForm = function() {
+            $scope.showForm = true;
+            $scope.user = null;
+            $scope.editingUser = null;
+        };
 
         $scope.showForm = false;
         $scope.editingUser = null;
 
-        $scope.toggleForm = function() {
-            $scope.showForm = !$scope.showForm;
+        $scope.closeForm = function() {
+            $scope.showForm = false;
             $scope.editingUser = null;
         };
 
