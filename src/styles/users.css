@@ -87,7 +87,6 @@ a:focus {
     flex-direction: column;
     justify-content: space-between;
     padding: 26px;
-    height: calc(var(--content--height) - 52px); 
 }
 
 .form-header {

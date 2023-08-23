@@ -23,7 +23,8 @@ angular.module('exampleApp')
         }
 
         function resetUserForm() {
-            $scope.user = null;
+            // $scope.user = null;
+            // $scope.editingUser = null;
             $scope.userForm.$setPristine();
             $scope.userForm.$setUntouched();
         }
@@ -48,6 +49,7 @@ angular.module('exampleApp')
                     resetFormErrors();
                     $scope.successMessage = 'User added successfully.';
                     $timeout($scope.closeStatusMessage, 5000);
+                    $timeout($scope.closeForm, 2000);
                 })
                 .catch(function(error) {
                     console.log('Error adding user:', error);
@@ -86,7 +88,6 @@ angular.module('exampleApp')
                     if (index !== -1) {
                         $scope.users[index] = angular.copy($scope.editingUser);
                     }
-                    resetUserForm();
                     resetFormErrors();
                     console.log('User was edited');
                     $scope.successMessage = 'User updated successfully.';
@@ -97,19 +98,20 @@ angular.module('exampleApp')
                     if (error.data && error.data.errors) {
                         $scope.serverErrors = error.data.errors;
                     }
-                    $scope.errorMessage = 'Error updating user.';
                     $timeout($scope.closeStatusMessage, 5000);
                 });
         };
 
         $scope.deleteUser = function(id) {
-            if (confirm("Are you sure you want to delete this user?")) {
+            if (confirm("Are you sure you want to delete this user11?")) {
                 UserService.deleteUser(id)
                     .then(function() {
                         resetFormErrors;
                         $scope.users = $scope.users.filter(user => user.id !== id);
+                        resetUserForm();
                         $scope.successMessage = 'User deleted successfully.';
                         $timeout($scope.closeStatusMessage, 5000);
+                        $timeout($scope.closeForm, 2000);
                     })
                     .catch(function(error) {
                         console.log('Error deleting user:', error);

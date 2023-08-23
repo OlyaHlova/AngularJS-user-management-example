@@ -46,17 +46,5 @@ angular.module('exampleApp')
             .catch(function(error) {
                 console.log('Error fetching users:', error);
             });
-
-        $scope.deleteUser = function(id) {
-            if (confirm("Are you sure you want to delete this user?")) {
-                UserService.deleteUser(id)
-                    .then(function() {
-                        $scope.users = $scope.users.filter(user => user.id !== id);
-                    })
-                    .catch(function(error) {
-                        console.log('Error deleting user:', error);
-                    });
-            }
-        };
     }
 ]);

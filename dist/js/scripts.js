@@ -37895,45 +37895,6 @@ angular.module('exampleApp', [
 
 
 angular.module('exampleApp')
-.directive('userFormValidation', function() {
-    return {
-        restrict: 'A',
-        require: 'form',
-        link: function(scope, element, attrs, formCtrl) {
-            // Initialize passwordValidationError
-            formCtrl.passwordValidationError = false;
-
-            // Initialize serverErrors
-            formCtrl.serverErrors = [];
-
-            // Validation function
-            function validatePassword(value) {
-                formCtrl.passwordValidationError = !(/^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(value));
-            }
-
-            // Watch for changes in the password field
-            scope.$watch(function() {
-                return formCtrl.password.$viewValue;
-            }, function(value) {
-                validatePassword(value);
-            });
-
-            // Watch for changes in serverErrors
-            scope.$watchCollection(function() {
-                return formCtrl.serverErrors;
-            }, function(newErrors) {
-                formCtrl.$setValidity('serverErrors', newErrors.length === 0);
-            });
-
-            // Expose the validation function for the service
-            formCtrl.validateUser = function(user) {
-                return validateUser(user);
-            };
-        }
-    };
-});
-
-angular.module('exampleApp')
 .controller('UserCtrl', [
     '$scope',
     '$routeParams',
@@ -37981,18 +37942,6 @@ angular.module('exampleApp')
             .catch(function(error) {
                 console.log('Error fetching users:', error);
             });
-
-        $scope.deleteUser = function(id) {
-            if (confirm("Are you sure you want to delete this user?")) {
-                UserService.deleteUser(id)
-                    .then(function() {
-                        $scope.users = $scope.users.filter(user => user.id !== id);
-                    })
-                    .catch(function(error) {
-                        console.log('Error deleting user:', error);
-                    });
-            }
-        };
     }
 ]);
 
@@ -38021,7 +37970,8 @@ angular.module('exampleApp')
         }
 
         function resetUserForm() {
-            $scope.user = null;
+            // $scope.user = null;
+            // $scope.editingUser = null;
             $scope.userForm.$setPristine();
             $scope.userForm.$setUntouched();
         }
@@ -38046,6 +37996,7 @@ angular.module('exampleApp')
                     resetFormErrors();
                     $scope.successMessage = 'User added successfully.';
                     $timeout($scope.closeStatusMessage, 5000);
+                    $timeout($scope.closeForm, 2000);
                 })
                 .catch(function(error) {
                     console.log('Error adding user:', error);
@@ -38084,7 +38035,6 @@ angular.module('exampleApp')
                     if (index !== -1) {
                         $scope.users[index] = angular.copy($scope.editingUser);
                     }
-                    resetUserForm();
                     resetFormErrors();
                     console.log('User was edited');
                     $scope.successMessage = 'User updated successfully.';
@@ -38095,19 +38045,20 @@ angular.module('exampleApp')
                     if (error.data && error.data.errors) {
                         $scope.serverErrors = error.data.errors;
                     }
-                    $scope.errorMessage = 'Error updating user.';
                     $timeout($scope.closeStatusMessage, 5000);
                 });
         };
 
         $scope.deleteUser = function(id) {
-            if (confirm("Are you sure you want to delete this user?")) {
+            if (confirm("Are you sure you want to delete this user11?")) {
                 UserService.deleteUser(id)
                     .then(function() {
                         resetFormErrors;
                         $scope.users = $scope.users.filter(user => user.id !== id);
+                        resetUserForm();
                         $scope.successMessage = 'User deleted successfully.';
                         $timeout($scope.closeStatusMessage, 5000);
+                        $timeout($scope.closeForm, 2000);
                     })
                     .catch(function(error) {
                         console.log('Error deleting user:', error);
@@ -38118,6 +38069,45 @@ angular.module('exampleApp')
         };
     }
 ]);
+
+angular.module('exampleApp')
+.directive('userFormValidation', function() {
+    return {
+        restrict: 'A',
+        require: 'form',
+        link: function(scope, element, attrs, formCtrl) {
+            // Initialize passwordValidationError
+            formCtrl.passwordValidationError = false;
+
+            // Initialize serverErrors
+            formCtrl.serverErrors = [];
+
+            // Validation function
+            function validatePassword(value) {
+                formCtrl.passwordValidationError = !(/^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(value));
+            }
+
+            // Watch for changes in the password field
+            scope.$watch(function() {
+                return formCtrl.password.$viewValue;
+            }, function(value) {
+                validatePassword(value);
+            });
+
+            // Watch for changes in serverErrors
+            scope.$watchCollection(function() {
+                return formCtrl.serverErrors;
+            }, function(newErrors) {
+                formCtrl.$setValidity('serverErrors', newErrors.length === 0);
+            });
+
+            // Expose the validation function for the service
+            formCtrl.validateUser = function(user) {
+                return validateUser(user);
+            };
+        }
+    };
+});
 
 angular.module('exampleApp')
 .factory('UserService', ['$http', '$q', function($http, $q) {
