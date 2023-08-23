@@ -84,14 +84,12 @@ var users = [
         lastName: 'Comercialmoctezuma',
         email: 'centroComercialMoctea@gmail.com',
         type: 'User'
-    }
-];
+    }];
 
 app.get('/users', function (req, res) {
   res.send(users);
 });
 
-// Fetch a single user by userName
 app.get('/users/:userName', function (req, res) {
     const userName = req.params.userName;
     const user = users.find(user => user.userName === userName);
@@ -107,8 +105,9 @@ app.post('/users', function(req, res) {
     users.push({
         userName: req.body.userName,
         firstName: req.body.firstName,
-        lastName: req.body.flastName,
-        email: req.body.femail,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: req.body.password,
         type: req.body.type
     });
     res.sendStatus(200);
@@ -121,6 +120,7 @@ app.put('/users/:id', function(req, res) {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
+        password: req.body.password,
         type: req.body.type
     };
 

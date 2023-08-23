@@ -14,7 +14,7 @@
             <div class="user-list--item">Email</div>
             <div class="user-list--item">Type</div>
         </div>
-        <div class="user-list--card" ng-init="getUser(userName)" ng-repeat="user in users track by user.userName">
+        <div class="user-list--card" ng-init="getUser(userName)" ng-repeat="user in users">
             <div class="user-list--item" ng-click="openForm(user)">
                 <a href="#!/user/{{user.userName}}">{{ user.userName }}</a>
             </div>

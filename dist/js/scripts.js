@@ -37881,10 +37881,10 @@ angular.module('exampleApp', [
                 controller: 'UserCtrl'
             })
             .when('/403', {
-                template: '<h1>Error 403: Access Forbidden</h1>',
+                templateUrl: 'views/errors/forbidden-page.html',
             })
             .when('/404', {
-            template: '<h1>Error 404: Page Not Found</h1>',
+                templateUrl: 'views/errors/not-found-page.html',
             })
             .otherwise({
                 templateUrl: 'views/errors/not-found-page.html',
@@ -37902,19 +37902,22 @@ angular.module('exampleApp')
     function ($scope, $routeParams, UserService) {
         
         $scope.userName = $routeParams.userName;
-        console.log('$routeParams', $routeParams.userName);
 
-        // Function to open the form for adding/editing users
         $scope.openForm = function(user) {
             $scope.showForm = true;
             $scope.editingUser = angular.copy(user);
         };
 
-        // Initialize variables for form visibility and editing user
+        // $scope.updateUser = function(updatedUser) {
+        //     const index = $scope.users.findIndex(u => u.id === updatedUser.id);
+        //     if (index !== -1) {
+        //         $scope.users[index] = angular.copy(updatedUser);
+        //     }
+        // };
+
         $scope.showForm = false;
         $scope.editingUser = null;
 
-        // Toggle form visibility
         $scope.toggleForm = function() {
             $scope.showForm = !$scope.showForm;
             $scope.editingUser = null;
@@ -37922,7 +37925,6 @@ angular.module('exampleApp')
 
         $scope.userName = $routeParams.userName;
 
-        // Fetch separate user from API
         if ($scope.userName) {
             UserService.getUser($scope.userName)
                 .then(function(user) {
@@ -37930,11 +37932,9 @@ angular.module('exampleApp')
                 })
                 .catch(function (error) {
                     console.log('Error fetching user data:', error);
-                    // Handle the error, such as showing an error message in the UI
                 });
         }
 
-        // Fetch users from API
         UserService.fetchUsers()
             .then(function() {
                 $scope.users = UserService.getUsers();
@@ -37943,12 +37943,10 @@ angular.module('exampleApp')
                 console.log('Error fetching users:', error);
             });
 
-        // Delete user function
         $scope.deleteUser = function(id) {
             if (confirm("Are you sure you want to delete this user?")) {
                 UserService.deleteUser(id)
                     .then(function() {
-                        // Remove the user from the displayed list
                         $scope.users = $scope.users.filter(user => user.id !== id);
                     })
                     .catch(function(error) {
@@ -37958,45 +37956,77 @@ angular.module('exampleApp')
         };
     }
 ]);
+
 angular.module('exampleApp')
 .controller('UserFormCtrl', [
     '$scope',
     'UserService',
     function ($scope, UserService) {
-        // Initialize an empty editingUser object
-        // $scope.editingUser = {};
 
-        // Add user function
+        // Initialize passwordValidationError
+        $scope.passwordValidationError = false;
+
+        // Initialize serverErrors
+        $scope.serverErrors = [];
+
+        function resetFormErrors() {
+            $scope.passwordValidationError = false;
+            $scope.serverErrors = [];
+        }
+
+        function resetUserForm() {
+            $scope.user = null;
+            $scope.userForm.$setPristine();
+            $scope.userForm.$setUntouched();
+        }
+
+        $scope.$watch('passwordValidationError', function(newVal) {
+            if (newVal) {
+                $scope.userForm.password.$setValidity('passwordValidation', false);
+            } else {
+                $scope.userForm.password.$setValidity('passwordValidation', true);
+            }
+        });
+
         $scope.addUser = function(user) {
-            UserService.addUser(user)
-                .then(function(newUser) {
-                    $scope.user = null;
-                    // Add the new user to the displayed list
-                    $scope.users.push(newUser);
-                    // $scope.users = null;
+            if ($scope.passwordValidationError || $scope.serverErrors.length > 0) {
+                return;
+            }
 
+            UserService.addUser(user)
+                .then(function(newUser) {      
+                    resetUserForm();
+                    $scope.users.push(newUser);
+                    resetFormErrors();
                 })
                 .catch(function(error) {
                     console.log('Error adding user:', error);
+                    if (error.data && error.data.errors) {
+                        $scope.serverErrors = error.data.errors;
+                    }
                 });
         };
 
-        // Edit user function
         $scope.editUser = function(user) {
-            // Deep copy the user object to editingUser
             $scope.editingUser = angular.copy(user);
-            // Set the editingUser's id to the user's id
             $scope.editingUser.id = user.id;
         };
 
-        // Save edited user function
         $scope.saveEditedUser = function() {
-            // Make sure the form data is correctly mapped to the editingUser object
+            if (!$scope.user){
+                return
+            }
+
+            if ($scope.passwordValidationError || $scope.serverErrors.length > 0) {
+                return;
+            }
+
             $scope.editingUser.userName = $scope.user.userName;
             $scope.editingUser.firstName = $scope.user.firstName;
             $scope.editingUser.lastName = $scope.user.lastName;
             $scope.editingUser.email = $scope.user.email;
             $scope.editingUser.type = $scope.user.type;
+            $scope.editingUser.password = $scope.user.password;
 
             UserService.updateUser($scope.editingUser)
                 .then(function() {
@@ -38006,21 +38036,24 @@ angular.module('exampleApp')
                         // Update the user in the displayed list
                         $scope.users[index] = angular.copy($scope.editingUser);
                     }
-                    // Clear the editingUser object
-                    $scope.editingUser = {};
+                    // $scope.updateUser($scope.editingUser);
+                    // $scope.editingUser = {};
+                    resetUserForm();
+                    resetFormErrors();
                     console.log('User was edited');
                 })
                 .catch(function(error) {
                     console.log('Error updating user:', error);
+                    if (error.data && error.data.errors) {
+                        $scope.serverErrors = error.data.errors;
+                    }
                 });
         };
 
-        // Delete user function
         $scope.deleteUser = function(id) {
             if (confirm("Are you sure you want to delete this user?")) {
                 UserService.deleteUser(id)
                     .then(function() {
-                        // Remove the user from the displayed list
                         $scope.users = $scope.users.filter(user => user.id !== id);
                     })
                     .catch(function(error) {
@@ -38030,9 +38063,66 @@ angular.module('exampleApp')
         };
     }
 ]);
+
 angular.module('exampleApp')
-.factory('UserService', ['$http', function($http) {
+.directive('userFormValidation', function() {
+    return {
+        restrict: 'A',
+        require: 'form',
+        link: function(scope, element, attrs, formCtrl) {
+            // Initialize passwordValidationError
+            formCtrl.passwordValidationError = false;
+
+            // Initialize serverErrors
+            formCtrl.serverErrors = [];
+
+            // Validation function
+            function validatePassword(value) {
+                formCtrl.passwordValidationError = !(/^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(value));
+            }
+
+            // Watch for changes in the password field
+            scope.$watch(function() {
+                return formCtrl.password.$viewValue;
+            }, function(value) {
+                validatePassword(value);
+            });
+
+            // Watch for changes in serverErrors
+            scope.$watchCollection(function() {
+                return formCtrl.serverErrors;
+            }, function(newErrors) {
+                formCtrl.$setValidity('serverErrors', newErrors.length === 0);
+            });
+
+            // Expose the validation function for the service
+            formCtrl.validateUser = function(user) {
+                return validateUser(user);
+            };
+        }
+    };
+});
+
+angular.module('exampleApp')
+.factory('UserService', ['$http', '$q', function($http, $q) {
     var users = [];
+
+    // Validation function
+    function validateUser(user) {
+        if (!user.userName || !user.firstName || !user.lastName || !user.email || !user.password || !user.type) {
+            return $q.reject(new Error('All fields are required.'));
+        }
+
+        if (!/(?=.*[A-Za-z])(?=.*\d).{8,}/.test(user.password)) {
+            return $q.reject(new Error('Password must be at least 8 characters long and contain at least one letter and one digit.'));
+        }
+
+        if (!/\S+@\S+\.\S+/.test(user.email)) {
+            return $q.reject(new Error('Invalid email address.'));
+        }
+
+        return $q.resolve(); // Validation passed
+    }
 
     return {
         getUsers: function() {
@@ -38061,16 +38151,20 @@ angular.module('exampleApp')
                 });
         },
         updateUser: function(user) {
-            return $http.put('http://localhost:3002/users/' + user.id, user)
-                .then(function(response) {
-                    var index = users.findIndex(u => u.id === user.id);
-                    if (index !== -1) {
-                        users[index] = angular.copy(user);
-                    }
-                    console.log('User updated successfully');
+            return validateUser(user)
+            .then(function() {
+                return $http.put('http://localhost:3002/users/' + user.id, user)
+                    .then(function(response) {
+                        var index = users.findIndex(u => u.id === user.id);
+                        if (index !== -1) {
+                            users[index] = angular.copy(user);
+                        }
+                        console.log('User updated successfully');
+                    })
                 })
                 .catch(function(error) {
                     console.log('Error updating user:', error);
+                    throw error;
                 });
         },
         deleteUser: function(id) {
@@ -38084,16 +38178,24 @@ angular.module('exampleApp')
                 })
                 .catch(function(error) {
                     console.log('Error deleting user:', error);
+                    throw error;
                 });
         },
         addUser: function(user) {
-            return $http.post('http://localhost:3002/users', user)
-                .then(function(response) {
-                    users.push(response.config.data);
-                    console.log('User added successfully', response);
+            return validateUser(user)
+                .then(function() {
+                    return $http.post('http://localhost:3002/users', user)
+                        .then(function(response) {
+                            users.push(response.config.data);
+                            console.log('User added successfully', response);
+                        })
+                        .catch(function(error) {
+                            console.log('Error adding user:', error);
+                            throw error;
+                        });
                 })
                 .catch(function(error) {
-                    console.log('Error adding user:', error);
+                    return $q.reject(error);
                 });
         }
     };

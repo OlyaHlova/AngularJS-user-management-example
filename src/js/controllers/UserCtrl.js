@@ -6,19 +6,22 @@ angular.module('exampleApp')
     function ($scope, $routeParams, UserService) {
         
         $scope.userName = $routeParams.userName;
-        console.log('$routeParams', $routeParams.userName);
 
-        // Function to open the form for adding/editing users
         $scope.openForm = function(user) {
             $scope.showForm = true;
             $scope.editingUser = angular.copy(user);
         };
 
-        // Initialize variables for form visibility and editing user
+        // $scope.updateUser = function(updatedUser) {
+        //     const index = $scope.users.findIndex(u => u.id === updatedUser.id);
+        //     if (index !== -1) {
+        //         $scope.users[index] = angular.copy(updatedUser);
+        //     }
+        // };
+
         $scope.showForm = false;
         $scope.editingUser = null;
 
-        // Toggle form visibility
         $scope.toggleForm = function() {
             $scope.showForm = !$scope.showForm;
             $scope.editingUser = null;
@@ -26,7 +29,6 @@ angular.module('exampleApp')
 
         $scope.userName = $routeParams.userName;
 
-        // Fetch separate user from API
         if ($scope.userName) {
             UserService.getUser($scope.userName)
                 .then(function(user) {
@@ -34,11 +36,9 @@ angular.module('exampleApp')
                 })
                 .catch(function (error) {
                     console.log('Error fetching user data:', error);
-                    // Handle the error, such as showing an error message in the UI
                 });
         }
 
-        // Fetch users from API
         UserService.fetchUsers()
             .then(function() {
                 $scope.users = UserService.getUsers();
@@ -47,12 +47,10 @@ angular.module('exampleApp')
                 console.log('Error fetching users:', error);
             });
 
-        // Delete user function
         $scope.deleteUser = function(id) {
             if (confirm("Are you sure you want to delete this user?")) {
                 UserService.deleteUser(id)
                     .then(function() {
-                        // Remove the user from the displayed list
                         $scope.users = $scope.users.filter(user => user.id !== id);
                     })
                     .catch(function(error) {

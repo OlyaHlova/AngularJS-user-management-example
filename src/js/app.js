@@ -14,10 +14,10 @@ angular.module('exampleApp', [
                 controller: 'UserCtrl'
             })
             .when('/403', {
-                template: '<h1>Error 403: Access Forbidden</h1>',
+                templateUrl: 'views/errors/forbidden-page.html',
             })
             .when('/404', {
-            template: '<h1>Error 404: Page Not Found</h1>',
+                templateUrl: 'views/errors/not-found-page.html',
             })
             .otherwise({
                 templateUrl: 'views/errors/not-found-page.html',
