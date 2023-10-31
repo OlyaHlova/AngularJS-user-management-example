@@ -9,8 +9,9 @@ body {
     --user-card--bg-color--highlight:    #EFF0F4;
 
     --main--text--color:                 #3F4254;
-    --title-secondary--color:            #A4A4B5;
+    --title-secondary--text--color:     #A4A4B5;
     --main--text--light:                  var(--main--white);
+    --danger--text--color:                #EF7DA0;
 
     --user-link--color--highlight:        #3a2dcd;
     --message--error--color:              #EF7DA0;

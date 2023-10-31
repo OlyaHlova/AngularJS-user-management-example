@@ -1,17 +1,17 @@
 <form name="userForm" 
     ng-controller="UserFormCtrl" 
-    user-form-validation
+    form-validation
     novalidate
     ng-if="showForm" 
     class="container user-form" 
     ng-init="initForm(users)" 
-    ng-submit="editingUser ? saveEditedUser() : addUser(user)">
+    ng-submit="editingUser ? saveEditedUser(user) : addUser(user)">
 
     <div class="top__container">
 
         <div class="form-header">
             <div class="form-title">
-                {{ editingUser ? (editingUser.firstName + ' ' + editingUser.lastName) : 'Create New User' }}
+                {{ user ? (user.firstName + ' ' + user.lastName) : 'Create New User' }}
             </div>
             <div class="form-close" ng-click="closeForm()">
                 &#10006;
@@ -20,74 +20,102 @@
 
         <div class="form-field">
             <label for="userName" class="form-field__label">Username</label>
-            <input type="text" ng-model="user.userName" name="userName" id="userName" class="form-field__input" required>
-            <div ng-if="userForm.userName.$error.required && (userForm.userName.$touched || userForm.$submitted)" class="error-message__invalid">
-                Username is required.
+            <input type="text" ng-model="user.userName" name="userName" id="userName" class="form-field__input" ng-required="true" unique-username>
+            <div ng-messages="userForm.userName.$error" class="error-message__invalid">
+                <div  ng-show="userForm.userName.$touched && userForm.userName.$required">Username is required.</div>
+                <div ng-message="uniqueUsername" ng-show="userForm.userName.$touched && userForm.userName.$invalid">Username is not unique.</div>
             </div>
         </div>
+
         <div class="form-field">
             <label for="firstName" class="form-field__label">First Name</label>
-            <input type="text" ng-model="user.firstName" name="firstName" id="firstName" class="form-field__input" required>
-            <div ng-if="userForm.firstName.$error.required && (userForm.firstName.$touched || userForm.$submitted)" class="error-message__invalid">
-                First name is required.
+            <input type="text" ng-model="user.firstName" name="firstName" id="firstName" class="form-field__input" ng-required="true">
+            <div ng-messages="userForm.firstName.$error" ng-show="userForm.firstName.$touched && userForm.firstName.$invalid" class="error-message__invalid">
+                <div ng-message="required">First name is required.</div>
             </div>
         </div>
+
         <div class="form-field">
             <label for="lastName" class="form-field__label">Last Name</label>
-            <input type="text" ng-model="user.lastName" name="lastName" id="lastName" class="form-field__input" required>
-            <div ng-if="userForm.lastName.$error.required && (userForm.lastName.$touched || userForm.$submitted)" class="error-message__invalid">
-                Last name is required.
+            <input type="text" ng-model="user.lastName" name="lastName" id="lastName" class="form-field__input" ng-required="true">
+            <div ng-messages="userForm.lastName.$error" ng-show="userForm.lastName.$touched && userForm.lastName.$invalid" class="error-message__invalid">
+                <div ng-message="required">Last name is required.</div>
             </div>
         </div>
+
         <div class="form-field">
             <label for="email" class="form-field__label">Email</label>
-            <input type="email" ng-model="user.email" name="email" id="email" class="form-field__input  email__input" required>
+            <input type="email" ng-model="user.email" name="email" id="email" class="form-field__input  email__input" ng-required="true">
             <div class=" email__char"></div>
-            <div ng-if="userForm.email.$error.required && (userForm.email.$touched || userForm.$submitted)" class="error-message__invalid">
-                Email is required.
-            </div>
-            <div ng-if="userForm.email.$error.email && (userForm.email.$touched || userForm.$submitted)" class="error-message__invalid">
-                Invalid email address.
+            <div ng-messages="userForm.email.$error" ng-show="userForm.email.$touched && userForm.email.$invalid" class="error-message__invalid">
+                <div ng-message="required">Email is required.</div>
+                <div ng-message="email">Invalid email address.</div>
             </div>
         </div>
+
         <div class="form-field">
             <label for="type" class="form-field__label">Type</label>
-            <input type="text" ng-model="user.type" name="type" id="type" class="form-field__input" required>
-            <div ng-if="userForm.type.$error.required && (userForm.type.$touched || userForm.$submitted)" class="error-message__invalid">
-                User type is required.
+            <select ng-model="user.type" name="type" id="type" class="form-field__input" ng-required="true">
+                <option value="Admin">Admin</option>
+                <option value="Driver">Driver</option>
+            </select>
+            <div class="select-arrow__char"></div>
+            <div ng-messages="userForm.type.$error" ng-show="userForm.type.$touched && userForm.type.$invalid" class="error-message__invalid">
+                <div ng-message="required">User type is required.</div>
             </div>
         </div>
+
+        <!-- <div class="form-field">
+            <label for="password" class="form-field__label">Password</label>
+            <input type="password" ng-model="user.password" name="password" id="password" class="form-field__input" ng-required="true" password-validation>
+            <div ng-messages="userForm.password.$error" ng-show="userForm.password.$touched && userForm.password.$invalid" class="error-message__invalid">
+                <div ng-message="required">Password is required.</div>
+            </div>
+            <div ng-messages="userForm.password.$error" ng-show="userForm.password.$touched && userForm.password.$invalid && !userForm.password.$error.required" class="error-message__invalid">
+                <div ng-message="passwordValidation">Password must be at least 8 characters long and contain at least one letter and one number.</div>
+            </div>
+        </div> -->
+
         <div class="form-field">
             <label for="password" class="form-field__label">Password</label>
-            <input type="password" ng-model="user.password" name="password" id="password" class="form-field__input" required>
-            <div ng-messages="userForm.password.$error" 
-                 ng-if="userForm.password.$error.required && (userForm.password.$touched || userForm.$submitted)"
-                 class="error-message__invalid">
+            <input type="password" ng-model="user.password" name="password" id="password" class="form-field__input" ng-required="true" password-validation>
+            <div ng-messages="userForm.password.$error" ng-show="userForm.password.$touched && userForm.password.$invalid" class="error-message__invalid">
                 <div ng-message="required">Password is required.</div>
+                <!-- <div ng-message="passwordValidation">Password must be at least 8 characters long and contain at least one letter and one number.</div> -->
+            </div>
+            <div ng-messages="userForm.password.$error" ng-show="userForm.password.$touched  && userForm.password.$invalid" class="error-message__invalid">
                 <div ng-message="passwordValidation">Password must be at least 8 characters long and contain at least one letter and one number.</div>
             </div>
         </div>
+
+        <!-- <div class="form-field">
+            <label for="password" class="form-field__label">Password</label>
+            <input type="password" ng-model="user.password" name="password" id="password" class="form-field__input" ng-required="true" form-validation>
+            <div ng-messages="userForm.password.$error" ng-show="userForm.password.$touched && userForm.password.$invalid" class="error-message__invalid">
+                <div ng-message="required">Password is required.</div>
+                <div ng-message="passwordValidation">Password must be at least 8 characters long and contain at least one letter and one number.</div>
+            </div>
+        </div> -->
+        
+
         <div class="form-field">
             <label for="repeatPassword" class="form-field__label">Repeat Password</label>
-            <input type="password" ng-model="user.repeatPassword" name="repeatPassword" id="repeatPassword" class="form-field__input" required>
-            <div ng-messages="userForm.repeatPassword.$error"
-                ng-if="userForm.repeatPassword.$error && (userForm.repeatPassword.$touched  || userForm.$submitted)"
-                class="error-message__invalid">
+            <input type="password" ng-model="user.repeatPassword" name="repeatPassword" id="repeatPassword" class="form-field__input" ng-required="true">
+            <div ng-messages="userForm.repeatPassword.$error" ng-show="userForm.repeatPassword.$touched && userForm.repeatPassword.$invalid" class="error-message__invalid">
                 <div ng-message="required">Repeat password is required.</div>
                 <div ng-message="compareTo">Passwords do not match.</div>
             </div>
         </div>
 
-        <!-- Display form validation errors -->
         <div class="error-message__invalid">
-            <div ng-messages="userForm.$error" ng-if="userForm.$submitted">
+            <div ng-messages="userForm.$error" ng-show="userForm.$submitted">
                 <div ng-message="serverErrors" ng-repeat="error in userForm.serverErrors">{{ error }}</div>
             </div>
         </div>
 
         <div class="message__container">
-            <div ng-if="successMessage" class="status-message success-message">{{successMessage}}</div>         
-            <div ng-if="errorMessage" class="status-message error-message">{{errorMessage}}</div>  
+            <div ng-if="successMessage" class="status-message success-message">{{ successMessage }}</div>         
+            <div ng-if="errorMessage" class="status-message error-message">{{ errorMessage }}</div>  
         </div>
     </div>
 

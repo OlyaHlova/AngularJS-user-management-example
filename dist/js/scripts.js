@@ -37904,30 +37904,72 @@ angular.module('exampleApp')
         $scope.userName = $routeParams.userName;
 
         $scope.openForm = function(user) {
+            
+            $scope.user = null;
+            console.log('$scope.user', $scope.user);
+            // $scope.resetUserForm();
+            // $scope.closeForm();
+            console.log('openForm +');
             $scope.showForm = true;
+            // $scope.editingUser = null;
+            // $scope.user = null;
+            console.log('user11', user);
+            $scope.user = user;
+            
+            console.log('$scope.user', $scope.user);
+            // $scope.user = angular.copy(user);
             $scope.editingUser = angular.copy(user);
+            // $scope.user = angular.copy(user);
+            console.log('$scope.user11', $scope.user);
             $scope.user = $scope.editingUser;
+            
+            console.log('$scope.editingUser11', $scope.editingUser);
+
+            // Watch for changes in  $scope.user
+            // $scope.$watch(function() {
+            //     return  $scope.user;
+            // }, function(newErrors) {
+            //     console.log(' $scope.user error' );
+            // });
         };
 
         $scope.openCreateForm = function() {
+            console.log('openCreateForm +');
             $scope.showForm = true;
             $scope.user = null;
+            console.log('$scope.user', $scope.user);
+            // $scope.editingUser = angular.copy( $scope.user);
+            // $scope.editingUser.userName = $scope.user.userName;
+            // $scope.editingUser.firstName = $scope.user.firstName;
+            // $scope.editingUser.lastName = $scope.user.lastName;
+            // $scope.editingUser.email = $scope.user.email;
+            // $scope.editingUser.type = $scope.user.type;
+            // $scope.editingUser.password = $scope.user.password;
             $scope.editingUser = null;
+            // console.log('user', user);
+            console.log('$scope.user', $scope.user);
+            console.log('$scope.editingUserr', $scope.editingUser);
         };
 
-        $scope.showForm = false;
-        $scope.editingUser = null;
+        // $scope.showForm = false;
+        // $scope.editingUser = null;
 
         $scope.closeForm = function() {
             $scope.showForm = false;
             $scope.editingUser = null;
         };
 
-        $scope.userName = $routeParams.userName;
+        // $scope.userName = $routeParams.userName;
+
+                 
+        console.log('UserService.getUser before +');
 
         if ($scope.userName) {
+            console.log('UserService.getUser 1 +');
             UserService.getUser($scope.userName)
                 .then(function(user) {
+                    
+            console.log('UserService.getUser 2 +');
                     $scope.user = user;
                 })
                 .catch(function (error) {
@@ -37936,7 +37978,8 @@ angular.module('exampleApp')
         }
 
         UserService.fetchUsers()
-            .then(function() {
+            .then(function() {         
+                console.log('UserService.fetchUsers +');
                 $scope.users = UserService.getUsers();
             })
             .catch(function(error) {
@@ -37971,83 +38014,119 @@ angular.module('exampleApp')
         }
 
         function resetUserForm() {
-            // $scope.user = null;
-            // $scope.editingUser = null;
+            $scope.user = null;
+            $scope.editingUser = null;
             $scope.userForm.$setPristine();
             $scope.userForm.$setUntouched();
+            // $scope.userForm.reset();           
         }
 
-        $scope.$watch('passwordValidationError', function(newVal) {
-            if (newVal) {
-                $scope.userForm.password.$setValidity('passwordValidation', false);
-            } else {
-                $scope.userForm.password.$setValidity('passwordValidation', true);
-            }
-        });
+        // $scope.$watch('passwordValidationError', function(newVal) {
+        //     if (newVal) {
+        //         $scope.userForm.password.$setValidity('passwordValidation', false);
+        //     } else {
+        //         $scope.userForm.password.$setValidity('passwordValidation', true);
+        //     }
+        // });
 
         $scope.addUser = function(user) {
             if ($scope.passwordValidationError || $scope.serverErrors.length > 0) {
                 return;
             }
+                     
+            if ($scope.userForm.$valid) {
 
-            UserService.addUser(user)
-                .then(function(newUser) {
-                    resetUserForm();
-                    $scope.users.push(newUser);
-                    resetFormErrors();
-                    $scope.successMessage = 'User added successfully.';
-                    $timeout($scope.closeStatusMessage, 5000);
-                    $timeout($scope.closeForm, 2000);
-                })
-                .catch(function(error) {
-                    console.log('Error adding user:', error);
-                    if (error.data && error.data.errors) {
-                        $scope.serverErrors = error.data.errors;
-                    }
-                    $scope.errorMessage = 'Error adding user.';
-                    $timeout($scope.closeStatusMessage, 5000);
+                UserService.addUser(user)
+                    .then(function(newUser) {
+                        resetUserForm();
+                        $scope.users.push(newUser);
+                        resetFormErrors();
+                        $scope.successMessage = 'User added successfully.';
+                        $timeout($scope.closeStatusMessage, 5000);
+                        // $timeout($scope.closeForm, 2000);
+                    })
+                    .catch(function(error) {
+                        console.log('Error adding user:', error);
+                        if (error.data && error.data.errors) {
+                            $scope.serverErrors = error.data.errors;
+                        }
+                        $scope.errorMessage = 'Error adding user.';
+                        $timeout($scope.closeStatusMessage, 5000);
+                    });
+
+            } else {
+               // Show error messages for invalid fields
+                // $scope.userForm.$setSubmitted();
+
+                // Mark fields as touched to show error messages
+                angular.forEach($scope.userForm.$error, function (field) {
+                    angular.forEach(field, function (errorField) {
+                        errorField.$setTouched();
+                    });
                 });
+            }
         };
 
-        $scope.editUser = function(user) {
-            $scope.editingUser = angular.copy(user);
-            $scope.editingUser.id = user.id;
-        };
+        // $scope.editUser = function(user) {
+        //     $scope.editingUser = angular.copy(user);
+        //     $scope.editingUser.id = user.id;
+        // };
 
-        $scope.saveEditedUser = function() {
-            if (!$scope.user) {
-                return;
-            }
+        $scope.saveEditedUser = function(user) {
 
-            if ($scope.passwordValidationError || $scope.serverErrors.length > 0) {
-                return;
-            }
+            
+            if ($scope.userForm.$valid) {
 
-            $scope.editingUser.userName = $scope.user.userName;
-            $scope.editingUser.firstName = $scope.user.firstName;
-            $scope.editingUser.lastName = $scope.user.lastName;
-            $scope.editingUser.email = $scope.user.email;
-            $scope.editingUser.type = $scope.user.type;
-            $scope.editingUser.password = $scope.user.password;
+                if (!$scope.user) {
+                    return;
+                }
 
-            UserService.updateUser($scope.editingUser)
-                .then(function() {
-                    const index = $scope.users.findIndex(u => u.id === $scope.editingUser.id);
-                    if (index !== -1) {
-                        $scope.users[index] = angular.copy($scope.editingUser);
-                    }
-                    resetFormErrors();
-                    console.log('User was edited');
-                    $scope.successMessage = 'User updated successfully.';
-                    $timeout($scope.closeStatusMessage, 5000);
-                })
-                .catch(function(error) {
-                    console.log('Error updating user:', error);
-                    if (error.data && error.data.errors) {
-                        $scope.serverErrors = error.data.errors;
-                    }
-                    $timeout($scope.closeStatusMessage, 5000);
+                if ($scope.passwordValidationError || $scope.serverErrors.length > 0) {
+                    return;
+                }
+
+                $scope.editingUser = angular.copy(user);
+                $scope.editingUser.id = user.id;
+
+                // $scope.editingUser.userName = $scope.user.userName;
+                // $scope.editingUser.firstName = $scope.user.firstName;
+                // $scope.editingUser.lastName = $scope.user.lastName;
+                // $scope.editingUser.email = $scope.user.email;
+                // $scope.editingUser.type = $scope.user.type;
+                // $scope.editingUser.password = $scope.user.password;
+
+                UserService.updateUser($scope.editingUser)
+                    .then(function() {
+                        const index = $scope.users.findIndex(u => u.id === $scope.editingUser.id);
+                        if (index !== -1) {
+                            $scope.users[index] = angular.copy($scope.editingUser);
+                        }
+                        resetFormErrors();
+                        // resetUserForm();
+                        console.log('User was edited');
+                        $scope.successMessage = 'User updated successfully.';
+                        $timeout($scope.closeStatusMessage, 5000);
+                    })
+                    .catch(function(error) {
+                        console.log('Error updating user:', error);
+                        if (error.data && error.data.errors) {
+                            $scope.serverErrors = error.data.errors;
+                        }
+                        $timeout($scope.closeStatusMessage, 5000);
+                    });
+
+            } else {
+                // Show error messages for invalid fields
+                // $scope.userForm.$setSubmitted();
+
+                // Mark fields as touched to show error messages
+                angular.forEach($scope.userForm.$error, function (field) {
+                    angular.forEach(field, function (errorField) {
+                        errorField.$setTouched();
+                    });
                 });
+            }
+
         };
 
         $scope.deleteUser = function(id) {
@@ -38059,7 +38138,7 @@ angular.module('exampleApp')
                         resetUserForm();
                         $scope.successMessage = 'User deleted successfully.';
                         $timeout($scope.closeStatusMessage, 5000);
-                        $timeout($scope.closeForm, 2000);
+                        // $timeout($scope.closeForm, 2000);
                     })
                     .catch(function(error) {
                         console.log('Error deleting user:', error);
@@ -38072,80 +38151,52 @@ angular.module('exampleApp')
 ]);
 
 angular.module('exampleApp')
-.directive('userFormValidation', function() {
-    return {
-        restrict: 'A',
-        require: 'form',
-        link: function(scope, element, attrs, formCtrl) {
-            // Initialize passwordValidationError
-            formCtrl.passwordValidationError = false;
-
-            // Initialize serverErrors
-            formCtrl.serverErrors = [];
-
-            // Validation function
-            function validatePassword(value) {
-                formCtrl.passwordValidationError = !(/^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(value));
-            }
-
-            // Watch for changes in the password field
-            scope.$watch(function() {
-                return formCtrl.password.$viewValue;
-            }, function(value) {
-                validatePassword(value);
-            });
-
-            // Watch for changes in serverErrors
-            scope.$watchCollection(function() {
-                return formCtrl.serverErrors;
-            }, function(newErrors) {
-                formCtrl.$setValidity('serverErrors', newErrors.length === 0);
-            });
-
-            // Expose the validation function for the service
-            formCtrl.validateUser = function(user) {
-                return validateUser(user);
-            };
-        }
-    };
-});
-
-angular.module('exampleApp')
 .factory('UserService', ['$http', '$q', function($http, $q) {
     var users = [];
-
-    // Validation function
-    function validateUser(user) {
-        if (!user.userName || !user.firstName || !user.lastName || !user.email || !user.password || !user.type) {
-            return $q.reject(new Error('All fields are required.'));
-        }
-
-        if (!/(?=.*[A-Za-z])(?=.*\d).{8,}/.test(user.password)) {
-            return $q.reject(new Error('Password must be at least 8 characters long and contain at least one letter and one digit.'));
-        }
-
-        if (!/\S+@\S+\.\S+/.test(user.email)) {
-            return $q.reject(new Error('Invalid email address.'));
-        }
-
-        return $q.resolve(); // Validation passed
+    var usernames = []; // Array to cache usernames
+    
+    function fetchUsers() {
+        return $http.get('http://localhost:3002/users')
+            .then(function(response) {
+                users = response.data;
+                usernames = users.map(function(user) {
+                    return user.userName;
+                });
+            })
+            .catch(function(error) {
+                console.log('Error fetching users:', error);
+            });
     }
-
+    
     return {
         getUsers: function() {
             return users;
         },
         setUsers: function(newUsers) {
             users = newUsers;
+            usernames = newUsers.map(function(user) {
+                return user.userName;
+            });
         },
         fetchUsers: function() {
-            return $http.get('http://localhost:3002/users')
-                .then(function(response) {
-                    users = response.data;
-                })
-                .catch(function(error) {
-                    console.log('Error fetching users:', error);
-                });
+            if (users.length === 0) {
+                return fetchUsers();
+            } else {
+                return $q.resolve();
+            }
+        },
+        getUsernames: function() {
+            return usernames;
+        },
+        fetchUsernames: function() {
+            if (usernames.length === 0) {
+                return fetchUsers()
+                    .then(function() {
+                        return $q.resolve();
+                    });
+            } else {
+                return $q.resolve();
+            }
         },
         getUser: function(userName) {
             return $http.get('http://localhost:3002/users/' + userName)
@@ -38158,8 +38209,8 @@ angular.module('exampleApp')
                 });
         },
         updateUser: function(user) {
-            return validateUser(user)
-                .then(function() {
+            // return userFormValidation.validateUser(user)
+            //     .then(function() {
                     return $http.put('http://localhost:3002/users/' + user.id, user)
                         .then(function(response) {
                             var index = users.findIndex(u => u.id === user.id);
@@ -38168,11 +38219,11 @@ angular.module('exampleApp')
                             }
                             console.log('User updated successfully');
                         })
-                    })
-                        .catch(function(error) {
-                            console.log('Error updating user:', error);
-                            throw error;
-                        });
+                    // })
+                        // .catch(function(error) {
+                        //     console.log('Error updating user:', error);
+                        //     throw error;
+                        // });
         },
         deleteUser: function(id) {
             return $http.delete('http://localhost:3002/users/' + id)
@@ -38189,8 +38240,8 @@ angular.module('exampleApp')
                 });
         },
         addUser: function(user) {
-            return validateUser(user)
-                .then(function() {
+            // return userFormValidation.validateUser(user)
+                // .then(function() {
                     return $http.post('http://localhost:3002/users', user)
                         .then(function(response) {
                             users.push(response.config.data);
@@ -38200,10 +38251,95 @@ angular.module('exampleApp')
                             console.log('Error adding user:', error);
                             throw error;
                         });
-                })
-                .catch(function(error) {
-                    return $q.reject(error);
-                });
+                // })
+                // .catch(function(error) {
+                //     return $q.reject(error);
+                // });
+        }
+    };
+}]);
+
+angular.module('exampleApp')
+.directive('uniqueUsername', ['UserService', '$q', function(UserService, $q) {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function(scope, element, attrs, ngModelCtrl) {
+            ngModelCtrl.$asyncValidators.unique = function(modelValue, viewValue) {
+                var value = modelValue || viewValue;
+
+                if (!value) {
+                    return $q.resolve(); // Порожнє значення вважається допустимим
+                }
+
+                return UserService.fetchUsernames()
+                    .then(function(usernames) {
+                        var isUnique = !usernames.includes(value.toLowerCase());
+
+                        if (isUnique) {
+                            return $q.resolve();
+                        } else {
+                            return $q.reject(); // Ім'я користувача не є унікальним
+                        }
+                    })
+                    .catch(function(error) {
+                        console.log('Error fetching usernames:', error);
+                        return $q.reject(); // Помилка, вважаємо ім'я користувача неуникальним
+                    });
+            };
+        }
+    };
+}]);
+
+angular.module('ValidationApp', [])
+.directive('formValidation', ['UserService', '$q', function(UserService, $q) {
+    return {
+        restrict: 'A',
+        require: 'form',
+        link: function(scope, element, attrs, formCtrl) {
+
+            formCtrl.$validators.passwordValidation = function(modelValue, viewValue) {
+                var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+        
+                if (formCtrl.$isEmpty(modelValue)) {
+                    return true; // Empty value is considered valid (leave it to the required directive)
+                }
+
+                if (passwordRegex.test(viewValue)) {
+                    return true; // Password is valid
+                }
+
+                return false; // Password is invalid
+            };
+
+            formCtrl.$validators.matchingPassword = function(modelValue, viewValue) {
+                var passwordValue = scope.$eval(attrs.matchPassword);
+                return modelValue === passwordValue;
+            };
+
+            formCtrl.$asyncValidators.uniqueUsername = function(modelValue, viewValue) {
+                var value = modelValue || viewValue;
+
+                if (!value) {
+                    return $q.resolve(); // Empty value is considered valid
+                }
+
+                return UserService.fetchUsernames()
+                    .then(function(usernames) {
+                        var isUnique = !usernames.includes(value.toLowerCase());
+
+                        if (isUnique) {
+                            return $q.resolve();
+                        } else {
+                            return $q.reject(); // Username is not unique
+                        }
+                    })
+                    .catch(function(error) {
+                        console.log('Error fetching usernames:', error);
+                        return $q.reject(); // Error, consider username not unique
+                    });
+            };
+
         }
     };
 }]);

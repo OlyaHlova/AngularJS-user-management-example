@@ -1,38 +1,52 @@
-angular.module('exampleApp')
-.directive('userFormValidation', function() {
+angular.module('ValidationApp', [])
+.directive('formValidation', ['UserService', '$q', function(UserService, $q) {
     return {
         restrict: 'A',
         require: 'form',
         link: function(scope, element, attrs, formCtrl) {
-            // Initialize passwordValidationError
-            formCtrl.passwordValidationError = false;
 
-            // Initialize serverErrors
-            formCtrl.serverErrors = [];
+            formCtrl.$validators.passwordValidation = function(modelValue, viewValue) {
+                var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+        
+                if (formCtrl.$isEmpty(modelValue)) {
+                    return true; // Empty value is considered valid (leave it to the required directive)
+                }
 
-            // Validation function
-            function validatePassword(value) {
-                formCtrl.passwordValidationError = !(/^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(value));
-            }
+                if (passwordRegex.test(viewValue)) {
+                    return true; // Password is valid
+                }
 
-            // Watch for changes in the password field
-            scope.$watch(function() {
-                return formCtrl.password.$viewValue;
-            }, function(value) {
-                validatePassword(value);
-            });
-
-            // Watch for changes in serverErrors
-            scope.$watchCollection(function() {
-                return formCtrl.serverErrors;
-            }, function(newErrors) {
-                formCtrl.$setValidity('serverErrors', newErrors.length === 0);
-            });
-
-            // Expose the validation function for the service
-            formCtrl.validateUser = function(user) {
-                return validateUser(user);
+                return false; // Password is invalid
             };
+
+            formCtrl.$validators.matchingPassword = function(modelValue, viewValue) {
+                var passwordValue = scope.$eval(attrs.matchPassword);
+                return modelValue === passwordValue;
+            };
+
+            formCtrl.$asyncValidators.uniqueUsername = function(modelValue, viewValue) {
+                var value = modelValue || viewValue;
+
+                if (!value) {
+                    return $q.resolve(); // Empty value is considered valid
+                }
+
+                return UserService.fetchUsernames()
+                    .then(function(usernames) {
+                        var isUnique = !usernames.includes(value.toLowerCase());
+
+                        if (isUnique) {
+                            return $q.resolve();
+                        } else {
+                            return $q.reject(); // Username is not unique
+                        }
+                    })
+                    .catch(function(error) {
+                        console.log('Error fetching usernames:', error);
+                        return $q.reject(); // Error, consider username not unique
+                    });
+            };
+
         }
     };
-});
+}]);

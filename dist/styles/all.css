@@ -73,6 +73,7 @@ body {
 
 .container {
     background-color: var(--container--bg-color);
+    border-radius: var(--main--border--radius);
     /* height: var(--content--height);  */
     /* overflow-y: auto; */
 }
@@ -107,24 +108,24 @@ body {
     padding: 22px 26px 21px;
 }
 
-.user-list__card:not(.title) {
+.user-list__card:not(.secondary-title) {
     background-color: var(--user-card--bg-color); 
 }
 
-.user-list__card:not(.title):active,
-.user-list__card:not(.title):hover,
-.user-list__card:not(.title):focus {
+.user-list__card:not(.secondary-title):active,
+.user-list__card:not(.secondary-title):hover,
+.user-list__card:not(.secondary-title):focus {
     background-color: var(--user-card--bg-color--highlight);
 }
 
 /* .user-list__card.title {
     text-transform: uppercase;
-    color: var(--title-secondary--color);
+    color: var(--title-secondary--text--color);
     font-weight: bold;
 } */
 .secondary-title {
     text-transform: uppercase;
-    color: var(--title-secondary--color);
+    color: var(--title-secondary--text--color);
     font-weight: bold;
 }
 
@@ -165,22 +166,26 @@ a:focus {
 .form-field__input{
     width: calc(100% - 32px);
     padding: 16px;
-    background: var(--input--iner--color);
+    background-color: var(--input--iner--color);
     border: none;
-    border-radius: 6px;
+    border-radius: var(--main--border--radius);
     position: relative;
 }
 
-.form-field__input.ng-invalid.ng-touched {
-    border: 1px solid red;
+/* .form-field__input.ng-invalid.ng-dirty */
+/* .form-field__input.ng-invalid:not(.ng-pristine) */
+.form-field__input.ng-invalid.ng-touched 
+/* ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched */
+{
+    border: 1px solid var(--danger--text--color);
 }
 
 .form-field__input:focus-visible {
-    border: none;
+    outline: none;
 }
 
 .error-message__invalid {
-    color: red; 
+    color: var(--danger--text--color); 
 }
 
 .email__input {
@@ -197,6 +202,19 @@ a:focus {
     color: #c8c6c6;
 }
 
+.select-arrow__char::before {
+    content: '\01F893';
+    position: absolute;
+    right: 16px;
+    top: 38px;
+    font-size: 24px;
+    color: var(--title-secondary--text--color);
+}
+
+.select-field {
+    width: 100%;
+}
+
 .form-actions {
     width: 100%;
     display: flex;
@@ -204,6 +222,24 @@ a:focus {
     gap: 16px;
 }
 
+.form-close {
+    color: var(--title-secondary--text--color);
+}
+
+/* Hide the default arrow */
+select.form-field__input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* background: url('./../assets/icons/arrow_drop_down.png'); */
+    padding-right: 25px; /* Adjust the padding to create space for the arrow */
+    width: 100%;
+}
+
+/* Style the custom arrow's position and size */
+select::-ms-expand {
+    display: none;
+}
 body {
 
     /* Color variables: */
@@ -215,8 +251,9 @@ body {
     --user-card--bg-color--highlight:    #EFF0F4;
 
     --main--text--color:                 #3F4254;
-    --title-secondary--color:            #A4A4B5;
+    --title-secondary--text--color:     #A4A4B5;
     --main--text--light:                  var(--main--white);
+    --danger--text--color:                #EF7DA0;
 
     --user-link--color--highlight:        #3a2dcd;
     --message--error--color:              #EF7DA0;
